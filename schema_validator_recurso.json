@@ -1,0 +1,301 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "Recurso — Schema Validator UTPL Turismo Loja",
+    "required": [
+      "origen",
+      "estado_procesamiento",
+      "metadata"
+    ],
+    "additionalProperties": true,
+    "properties": {
+      "origen": {
+        "bsonType": "object",
+        "required": [
+          "plataforma",
+          "formato",
+          "id_externo",
+          "fecha_ingesta"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "plataforma": {
+            "bsonType": "string",
+            "enum": [
+              "TikTok",
+              "YouTube",
+              "Instagram",
+              "GoogleReviews",
+              "TripAdvisor",
+              "Flickr",
+              "Eventbrite",
+              "mock"
+            ],
+            "description": "Plataforma de origen. Valores permitidos: TikTok, YouTube, Instagram, GoogleReviews, TripAdvisor, Flickr, Eventbrite, mock"
+          },
+          "formato": {
+            "bsonType": "string",
+            "enum": [
+              "video",
+              "reseña",
+              "post",
+              "articulo",
+              "imagen",
+              "mock"
+            ],
+            "description": "Formato del contenido"
+          },
+          "id_externo": {
+            "bsonType": "string",
+            "minLength": 1,
+            "description": "ID único del recurso en la plataforma de origen. Obligatorio y no vacío."
+          },
+          "fecha_ingesta": {
+            "bsonType": "string",
+            "description": "Fecha ISO 8601 de cuando se extrajo el dato"
+          },
+          "ubicacion_cruda": {
+            "bsonType": [
+              "string",
+              "null"
+            ],
+            "description": "Texto libre de ubicación si la plataforma lo provee"
+          }
+        }
+      },
+      "estado_procesamiento": {
+        "bsonType": "string",
+        "enum": [
+          "Crudo",
+          "Clasificado",
+          "Error"
+        ],
+        "description": "Estado del recurso en el pipeline ETL. Solo: Crudo, Clasificado, Error"
+      },
+      "fecha_publicacion": {
+        "bsonType": [
+          "string",
+          "null"
+        ],
+        "description": "Fecha de publicación original en la plataforma (YYYY-MM-DD)"
+      },
+      "edicion_id": {
+        "bsonType": [
+          "objectId",
+          "null"
+        ],
+        "description": "Referencia a la Edicion del Evento. Puede ser null si no se conoce."
+      },
+      "lugar_id": {
+        "bsonType": [
+          "objectId",
+          "null"
+        ],
+        "description": "Referencia al Lugar. Puede ser null si no aplica."
+      },
+      "metadata": {
+        "bsonType": "object",
+        "description": "Objeto polimórfico. Estructura varía según plataforma. Nunca puede estar vacío.",
+        "minProperties": 1,
+        "properties": {
+          "metricas": {
+            "bsonType": "object",
+            "description": "Métricas de engagement de la plataforma",
+            "properties": {
+              "likes": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "shares": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "plays": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "guardados": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "comentarios": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              }
+            }
+          },
+          "autor": {
+            "bsonType": "object",
+            "description": "Datos del creador del contenido",
+            "properties": {
+              "name": {
+                "bsonType": "string"
+              },
+              "verified": {
+                "bsonType": [
+                  "bool",
+                  "null"
+                ]
+              },
+              "fans": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "heart": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "video": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "following": {
+                "bsonType": [
+                  "int",
+                  "long",
+                  "double",
+                  "null"
+                ]
+              },
+              "signature": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "texto_original": {
+            "bsonType": [
+              "string",
+              "null"
+            ],
+            "description": "Caption / descripción original del contenido"
+          },
+          "hashtags": {
+            "bsonType": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "bsonType": "string"
+            },
+            "description": "Lista de hashtags sin el símbolo #"
+          },
+          "idioma": {
+            "bsonType": [
+              "string",
+              "null"
+            ],
+            "description": "Código ISO 639-1 del idioma detectado (ej: es, en)"
+          },
+          "es_anuncio": {
+            "bsonType": [
+              "bool",
+              "null"
+            ]
+          },
+          "es_patrocinado": {
+            "bsonType": [
+              "bool",
+              "null"
+            ]
+          },
+          "video": {
+            "bsonType": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "duracion_seg": {
+                "bsonType": [
+                  "int",
+                  "double",
+                  "null"
+                ]
+              },
+              "cover_url": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "musica": {
+            "bsonType": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "nombre": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              },
+              "autor": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "urls": {
+            "bsonType": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "video": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cover": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+# ── Python ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Entorno virtual ───────────────────────────────────────
+venv/
+env/
+.env/
+.venv/
+ENV/
+
+# ── Variables de entorno (NUNCA subir credenciales) ───────
+.env
+.env.local
+.env.production
+backend/.env
+
+# ── Node.js (si se usó para generar los .docx) ────────────
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# ── Sistema operativo ─────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── VS Code ───────────────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# ── PyCharm / JetBrains ───────────────────────────────────
+.idea/
+
+# ── Logs ──────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Archivos temporales ───────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo

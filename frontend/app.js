@@ -1,0 +1,80 @@
+/**
+ * app.js — Router principal de la SPA.
+ * Carga catálogos, gestiona navegación y health check.
+ */
+import { render as renderHome }     from './views/home.js';
+import { render as renderDB }       from './views/database.js';
+import { render as renderETL }      from './views/etl.js';
+import { render as renderLugares }  from './views/lugares.js';
+import { render as renderEventos }  from './views/eventos.js';
+import { apiFetch, toast }          from './components/badges.js';
+
+const main = document.getElementById('main');
+
+// Estado global compartido entre vistas
+const state = {
+  catEventos  : [],
+  catEdiciones: [],
+  catLugares  : [],
+};
+
+// ── Catálogos (carga una sola vez al inicio) ─────────────
+async function cargarCatalogos() {
+  try {
+    const [re, rl, rev] = await Promise.all([
+      apiFetch('/api/catalogos/ediciones'),
+      apiFetch('/api/catalogos/lugares'),
+      apiFetch('/api/catalogos/eventos'),
+    ]);
+    state.catEdiciones = re.exito  ? re.data  : [];
+    state.catLugares   = rl.exito  ? rl.data  : [];
+    state.catEventos   = rev.exito ? rev.data : [];
+  } catch (e) {
+    console.warn('No se pudieron cargar los catálogos:', e.message);
+  }
+}
+
+// ── Health check ─────────────────────────────────────────
+async function checkHealth() {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-txt');
+  try {
+    const d  = await apiFetch('/api/health');
+    const ok = d.mongodb === 'conectado';
+    dot.className    = 'dot ' + (ok ? 'ok' : 'err');
+    txt.textContent  = ok ? 'Base de datos conectada' : 'Sin base de datos';
+    txt.style.color  = ok ? 'var(--green)' : 'var(--red)';
+  } catch {
+    dot.className   = 'dot err';
+    txt.textContent = 'API no disponible';
+    txt.style.color = 'var(--red)';
+  }
+}
+
+// ── Navegación ────────────────────────────────────────────
+const TITULOS = { home: 'Inicio', db: 'Base de Datos', etl: 'Ingesta ETL', lugares: 'Lugares', eventos: 'Eventos y Ediciones' };
+
+export function ir(vista) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + vista)?.classList.add('active');
+  document.getElementById('header-title').textContent = TITULOS[vista] || vista;
+
+  switch (vista) {
+    case 'home':    renderHome(main, state);   break;
+    case 'db':      renderDB(main, state);     break;
+    case 'etl':     renderETL(main);           break;
+    case 'lugares': renderLugares(main);       break;
+    case 'eventos': renderEventos(main);       break;
+  }
+}
+
+// Exponer ir() globalmente para los onclick del HTML
+window.irVista = ir;
+
+// ── Inicio ────────────────────────────────────────────────
+(async () => {
+  checkHealth();
+  setInterval(checkHealth, 20000);
+  await cargarCatalogos();
+  ir('home');
+})();
