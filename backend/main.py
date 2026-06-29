@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import recursos_router, etl_router, catalogos_router, catalogos_crud_router
+from .routes import recursos_router, etl_router, catalogos_router, catalogos_crud_router, stats_router
 from .database import get_col, is_connected
 
 app = FastAPI(
@@ -30,6 +30,7 @@ app.include_router(recursos_router)
 app.include_router(etl_router)
 app.include_router(catalogos_router)
 app.include_router(catalogos_crud_router)
+app.include_router(stats_router)
 
 
 @app.get("/", tags=["Salud"])
