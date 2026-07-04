@@ -52,19 +52,41 @@ async function checkHealth() {
 }
 
 // ── Navegación ────────────────────────────────────────────
-const TITULOS = { home: 'Inicio', db: 'Base de Datos', etl: 'Ingesta ETL', lugares: 'Lugares', eventos: 'Eventos y Ediciones' };
+const TITULOS = {
+  home: 'Inicio',
+  etl: 'Ingesta ETL',
+  'db-eventos' : 'Base de Datos · Eventos',
+  'db-lugares' : 'Base de Datos · Lugares',
+  'db-recursos': 'Base de Datos · Recursos',
+};
+
+let dbAbierto = false;
+
+function setDbAbierto(abierto) {
+  dbAbierto = abierto;
+  document.getElementById('db-submenu')?.classList.toggle('open', dbAbierto);
+  document.getElementById('db-chevron')?.classList.toggle('rot', dbAbierto);
+}
+
+// Alterna el desplegable "Base de Datos" al hacer click en el item padre
+export function toggleDbMenu() {
+  setDbAbierto(!dbAbierto);
+}
+window.toggleDbMenu = toggleDbMenu;
 
 export function ir(vista) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + vista)?.classList.add('active');
   document.getElementById('header-title').textContent = TITULOS[vista] || vista;
 
+  if (vista.startsWith('db-')) setDbAbierto(true);
+
   switch (vista) {
-    case 'home':    renderHome(main, state);   break;
-    case 'db':      renderDB(main, state);     break;
-    case 'etl':     renderETL(main);           break;
-    case 'lugares': renderLugares(main);       break;
-    case 'eventos': renderEventos(main);       break;
+    case 'home':         renderHome(main, state);   break;
+    case 'db-recursos':  renderDB(main, state);     break;
+    case 'db-lugares':   renderLugares(main);       break;
+    case 'db-eventos':   renderEventos(main);       break;
+    case 'etl':          renderETL(main);           break;
   }
 }
 
