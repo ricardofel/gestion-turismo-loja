@@ -56,10 +56,16 @@ def listar_recursos(
             # Si el id no es válido, no va a haber resultados de todas formas
             filtro["lugar_id"] = lugar_id
 
-    # evento_id: requiere lookup en colección edicion
+    # edicion_id es más específico que evento_id (una edición pertenece a un
+    # solo evento) — si viene informado, tiene prioridad sobre el filtro de evento.
+    if edicion_id:
+        oid_edicion = _oid_or_none(edicion_id)
+        filtro["edicion_id"] = oid_edicion if oid_edicion else edicion_id
+
+    # evento_id sin edicion_id: requiere lookup en colección edicion
     # primero buscamos todas las ediciones de ese evento,
     # luego filtramos recursos cuyos edicion_id estén en esa lista
-    if evento_id:
+    elif evento_id:
         oid_evento = _oid_or_none(evento_id)
         query_evento = {"evento_id": oid_evento} if oid_evento else {"evento_id": evento_id}
         ediciones = get_col(COL_EDICION).find(query_evento, {"_id": 1})
@@ -68,11 +74,6 @@ def listar_recursos(
             # No hay ediciones para ese evento → sin resultados
             return {"exito": True, "total": 0, "data": []}
         filtro["edicion_id"] = {"$in": ids_edicion}
-
-    # edicion_id directo (si viene del filtro de edición, no de evento)
-    elif edicion_id:
-        oid_edicion = _oid_or_none(edicion_id)
-        filtro["edicion_id"] = oid_edicion if oid_edicion else edicion_id
 
     # Rango de fechas sobre fecha_publicacion (string "YYYY-MM-DD")
     if fecha_desde or fecha_hasta:

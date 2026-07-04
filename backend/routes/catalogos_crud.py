@@ -177,6 +177,12 @@ def impacto_evento(id: str):
 # EDICIONES
 # ══════════════════════════════════════════════
 
+@router.get("/ediciones")
+def listar_ediciones():
+    docs = [serializar_doc(d) for d in get_col(COL_EDICION).find({}).sort("anio", -1)]
+    return {"exito": True, "total": len(docs), "data": docs}
+
+
 @router.get("/eventos/{evento_id}/ediciones")
 def listar_ediciones_de_evento(evento_id: str):
     docs = [

@@ -30,7 +30,10 @@ export async function render(container, { catEventos, catEdiciones, catLugares }
 
   container.innerHTML = `
     <div class="card">
-      <div class="card-label">Filtros</div>
+      <div class="card-label" style="margin-bottom:4px">Filtros</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">
+        Combina los filtros que necesites — puedes dejar cualquiera vacío.
+      </p>
       <div class="filtros-grid">
         <div class="fg"><label>Evento</label><div id="ac-evento"></div></div>
         <div class="fg">
@@ -57,6 +60,7 @@ export async function render(container, { catEventos, catEdiciones, catLugares }
         <span class="card-label" style="margin:0">Inventario de recursos</span>
         <span id="db-total" style="font-size:12px;color:var(--muted)"></span>
       </div>
+      <div id="filtros-chips" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
       <div id="lista-db"></div>
       <div class="pag" id="pag-ctrl" style="display:none">
         <button class="btn btn-ghost btn-sm" id="pag-prev">Anterior</button>
@@ -174,6 +178,55 @@ function limpiarFiltros() {
   dbPage = 0; cargarRecursos();
 }
 
+// ── Chips de filtros activos ──────────────────────────────
+// Reflejan el filtro realmente aplicado (última consulta), no lo que
+// esté escrito sin confirmar en los campos.
+function renderChips() {
+  const cont = document.getElementById('filtros-chips');
+  if (!cont) return;
+
+  const chips = [];
+  if (filtro.evento_id)
+    chips.push({ key: 'evento', label: `Evento: ${acEventoCtrl?.getNombre() || '—'}` });
+  if (filtro.edicion_id)
+    chips.push({ key: 'edicion', label: `Edición: ${acEdicionCtrl?.getNombre() || '—'}` });
+  if (filtro.lugar_id)
+    chips.push({ key: 'lugar', label: `Lugar: ${acLugarCtrl?.getNombre() || '—'}` });
+  if (filtro.plataforma)
+    chips.push({ key: 'plataforma', label: `Plataforma: ${acPlatCtrl?.getNombre() || '—'}` });
+  if (filtro.fecha_desde || filtro.fecha_hasta)
+    chips.push({ key: 'fecha', label: `Fechas: ${filtro.fecha_desde || '…'} → ${filtro.fecha_hasta || '…'}` });
+
+  if (!chips.length) { cont.style.display = 'none'; cont.innerHTML = ''; return; }
+
+  cont.style.display = 'flex';
+  cont.innerHTML = chips.map(c => `
+    <span class="tag-chip">
+      ${c.label}
+      <button type="button" data-key="${c.key}" title="Quitar este filtro">×</button>
+    </span>
+  `).join('');
+
+  cont.querySelectorAll('button[data-key]').forEach(btn =>
+    btn.addEventListener('click', () => quitarFiltro(btn.dataset.key))
+  );
+}
+
+function quitarFiltro(key) {
+  switch (key) {
+    case 'evento':     acEventoCtrl?.reset();  break;
+    case 'edicion':    acEdicionCtrl?.reset(); break;
+    case 'lugar':      acLugarCtrl?.reset();   break;
+    case 'plataforma': acPlatCtrl?.reset();    break;
+    case 'fecha':
+      dpFechaCtrl?.reset();
+      delete filtro.fecha_desde; delete filtro.fecha_hasta;
+      break;
+  }
+  dbPage = 0;
+  cargarRecursos();
+}
+
 // ── Carga de recursos ─────────────────────────────────────
 async function cargarRecursos(scroll = false) {
   const lista = document.getElementById('lista-db');
@@ -190,6 +243,8 @@ async function cargarRecursos(scroll = false) {
   if (filtro.fecha_hasta) p.set('fecha_hasta', filtro.fecha_hasta);
   p.set('skip', dbPage * DB_LIMIT);
   p.set('limit', DB_LIMIT);
+
+  renderChips();
 
   try {
     const d     = await apiFetch('/api/recursos?' + p);
