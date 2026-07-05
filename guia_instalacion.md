@@ -10,8 +10,27 @@ MongoDB) y **frontend** (HTML/JS sin build, ES Modules puros).
 ## 1. Requisitos previos
 
 - Python 3.11+ instalado
-- Una base de datos MongoDB Atlas (gratuita) — o un MongoDB local si prefieres
+- **Acceso al cluster compartido de MongoDB Atlas del equipo** 
 - Una API Key de YouTube Data API v3 (ver paso 4)
+
+> **Sobre la base de datos: todos trabajamos contra la misma instancia.**
+> Este proyecto usa **un único cluster de MongoDB Atlas compartido por todo
+> el equipo** — no uno local por persona. Esto es intencional: los
+> catálogos de Lugares/Eventos/Ediciones y los recursos ingeridos deben ser
+> los mismos para todos, para que el trabajo de cada quien (crear un lugar,
+> correr una extracción ETL, revisar datos en Base de Datos) sea visible
+> para el resto del equipo de inmediato.
+>
+> Por seguridad, la cadena de conexión (`MONGO_URI`) **no está en este
+> repositorio ni en ningún archivo versionado** — pídesela directamente a
+> quien administra el cluster (por un canal privado, no por chat público)
+> y pégala en tu `backend/.env` local, siguiendo el paso 4. Si tu conexión
+> falla con un error de red/timeout, probablemente tu IP no esté en la
+> whitelist de Atlas (Network Access) — pide que la agreguen ahí.
+>
+> No se necesita (ni se recomienda) montar un MongoDB local para este
+> proyecto: los datos de prueba, catálogos y credenciales de API ya viven
+> en el cluster compartido.
 
 ---
 
@@ -53,18 +72,25 @@ Edita `backend/.env` con:
 
 ```
 MONGO_URI=mongodb+srv://usuario:password@cluster.mongodb.net/
-MONGO_DB=turismo_loja
-YOUTUBE_API_KEY=AIza...
+MONGO_DB=db_name
+YOUTUBE_API_KEY=api_key
 ```
 
-- **MONGO_URI / MONGO_DB**: credenciales de tu cluster de MongoDB Atlas
-  (Atlas → Database → Connect → Drivers).
-- **YOUTUBE_API_KEY**: gratuita, se obtiene en
-  [console.cloud.google.com](https://console.cloud.google.com) → habilita
-  "YouTube Data API v3" → Credentials → Create API Key. Toma 2-3 minutos y
-  no pide tarjeta de crédito.
+**Nota:** Pedir los datos del .env al admin, la api key de youtube se puede generar personalmente.
 
-`backend/.env` nunca se debe subir al repositorio (ya está en `.gitignore`).
+- **MONGO_URI**: la cadena de conexión del **cluster compartido del
+  equipo** (no es de cada quien — pídesela a quien lo administra, ver nota
+  del paso 1). Nunca la escribas en un commit, issue, PR o chat público.
+- **MONGO_DB**: el nombre de la base es `turismo_loja` para todo el equipo
+  — no lo cambies, o vas a estar leyendo/escribiendo en una base vacía
+  distinta a la del resto.
+- **YOUTUBE_API_KEY**: esta sí es individual — cada persona genera la suya,
+  gratuita, en [console.cloud.google.com](https://console.cloud.google.com)
+  → habilita "YouTube Data API v3" → Credentials → Create API Key. Toma
+  2-3 minutos y no pide tarjeta de crédito.
+
+`backend/.env` nunca se debe subir al repositorio (ya está en `.gitignore`)
+— es tuyo, local, y contiene credenciales reales.
 
 ## 5. Levantar el backend
 

@@ -5,7 +5,7 @@
 
 ## Estado actual (2026-07)
 
-Con presupuesto $0, solo **YouTube Data API v3** quedó activa como fuente real.
+Solo **YouTube Data API v3** quedó activa como fuente real.
 Es la única que es 100% gratuita, self-service (sin aprobación de terceros) y
 sin necesidad de tarjeta de crédito.
 
