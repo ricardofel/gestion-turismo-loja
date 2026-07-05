@@ -8,7 +8,7 @@ import { render as renderETL }      from './views/etl.js';
 import { render as renderLugares }  from './views/lugares.js';
 import { render as renderEventos }  from './views/eventos.js';
 import { apiFetch, toast }          from './components/badges.js';
-import { nuevoToken }               from './components/nav-state.js';
+import { nuevoToken, esTokenVigente } from './components/nav-state.js';
 
 const main = document.getElementById('main');
 
@@ -19,7 +19,10 @@ const state = {
   catLugares  : [],
 };
 
-// ── Catálogos (carga una sola vez al inicio) ─────────────
+// ── Catálogos ──────────────────────────────────────────────
+// Se cargan al inicio y se refrescan cada vez que se entra a una vista de
+// "Base de Datos" — si no, crear un lugar/evento nuevo no se reflejaría en
+// los filtros/selectores hasta recargar toda la página.
 async function cargarCatalogos() {
   try {
     const [re, rl, rev] = await Promise.all([
@@ -75,7 +78,7 @@ export function toggleDbMenu() {
 }
 window.toggleDbMenu = toggleDbMenu;
 
-export function ir(vista) {
+export async function ir(vista) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + vista)?.classList.add('active');
   document.getElementById('header-title').textContent = TITULOS[vista] || vista;
@@ -83,6 +86,11 @@ export function ir(vista) {
   if (vista.startsWith('db-')) setDbAbierto(true);
 
   const token = nuevoToken();
+
+  if (vista.startsWith('db-')) {
+    await cargarCatalogos();
+    if (!esTokenVigente(token)) return; // el usuario ya navegó a otra vista
+  }
 
   switch (vista) {
     case 'home':         renderHome(main, state, token); break;

@@ -11,10 +11,8 @@ let filtro = {};
 let acEventoCtrl, acEdicionCtrl, acLugarCtrl, acPlatCtrl, dpFechaCtrl;
 let _editId         = null;
 let _modalLugarId   = null;
+let _modalEventoId  = null;
 let _modalEdicionId = null;
-let _catLugares     = [];
-let _catEdiciones   = [];
-let _catEventos     = [];
 
 const PLATAFORMAS_CAT = [
   { id: 'TikTok',        nombre: 'TikTok' },
@@ -24,9 +22,6 @@ const PLATAFORMAS_CAT = [
 
 export async function render(container, { catEventos, catEdiciones, catLugares }) {
   dbPage = 0; filtro = {};
-  _catLugares   = catLugares;
-  _catEdiciones = catEdiciones;
-  _catEventos   = catEventos;
 
   container.innerHTML = `
     <div class="card">
@@ -95,9 +90,16 @@ export async function render(container, { catEventos, catEdiciones, catLugares }
           </div>
 
           <div class="form-row">
+            <label>Asignar evento <span style="font-weight:400;opacity:.6">(opcional)</span></label>
+            <div id="m-evento-ac"></div>
+            <p style="font-size:11px;color:var(--muted);margin-top:4px">Elige el evento para poder elegir su edición.</p>
+          </div>
+
+          <div class="form-row">
             <label>Asignar edicion <span style="font-weight:400;opacity:.6">(opcional)</span></label>
-            <div id="m-edicion-ac"></div>
-            <p style="font-size:11px;color:var(--muted);margin-top:4px">Año de celebración del evento al que pertenece este contenido.</p>
+            <div id="m-edicion-wrap">
+              <div class="ac-bloqueado">Selecciona primero un evento</div>
+            </div>
           </div>
 
           <div class="form-row">
@@ -307,25 +309,40 @@ function renderCard(r) {
 }
 
 // ── Modal enriquecido ─────────────────────────────────────
+// Todo se carga fresco del servidor cada vez que se abre (lugares, eventos,
+// ediciones) — así los lugares/eventos creados hace un momento en sus
+// propias vistas ya aparecen, sin depender de los catálogos cargados al
+// inicio de la app.
 async function abrirModal(id) {
   _editId = id;
-  _modalLugarId = null; _modalEdicionId = null;
+  _modalLugarId = null; _modalEventoId = null; _modalEdicionId = null;
 
-  // Cargar el recurso completo del servidor
   const infoEl = document.getElementById('m-info');
   infoEl.innerHTML = `<span style="color:var(--muted)">Cargando información...</span>`;
   document.getElementById('db-modal').style.display = 'flex';
 
   try {
-    const d = await apiFetch(`/api/recursos/${id}`);
-    const r = d.data;
-    const meta = r.metadata || {};
+    const [dRecurso, dLugares, dEventos, dEdiciones] = await Promise.all([
+      apiFetch(`/api/recursos/${id}`),
+      apiFetch('/api/lugares'),
+      apiFetch('/api/eventos'),
+      apiFetch('/api/ediciones'),
+    ]);
+    const r         = dRecurso.data;
+    const meta      = r.metadata || {};
+    const lugares   = dLugares.data   || [];
+    const eventos   = dEventos.data   || [];
+    const ediciones = dEdiciones.data || [];
 
-    // Buscar nombre del evento/edición en los catálogos
-    const edicionId  = r.edicion_id || '';
-    const edicionObj = _catEdiciones.find(e => e.id === edicionId);
     const lugarId    = r.lugar_id   || '';
-    const lugarObj   = _catLugares.find(l => l.id === lugarId);
+    const lugarObj   = lugares.find(l => l._id === lugarId);
+    const edicionId  = r.edicion_id || '';
+    const edicionObj = ediciones.find(e => e._id === edicionId);
+    const eventoObj  = edicionObj ? eventos.find(ev => ev._id === edicionObj.evento_id) : null;
+
+    const labelEdicion = edicionObj
+      ? `${eventoObj?.nombre_oficial || 'Evento desconocido'} — ${edicionObj.anio}`
+      : null;
 
     // Panel de info de solo lectura
     const metricas = meta.metricas || {};
@@ -341,7 +358,7 @@ async function abrirModal(id) {
         <div><span style="color:var(--muted)">Autor:</span> <strong>${meta.autor?.name || '—'}</strong></div>
         <div><span style="color:var(--muted)">Fecha publicacion:</span> ${r.fecha_publicacion || '—'}</div>
         <div><span style="color:var(--muted)">Lugar asignado:</span> ${lugarObj?.nombre || '<em>Sin asignar</em>'}</div>
-        <div><span style="color:var(--muted)">Edicion asignada:</span> ${edicionObj?.nombre || '<em>Sin asignar</em>'}</div>
+        <div><span style="color:var(--muted)">Edicion asignada:</span> ${labelEdicion || '<em>Sin asignar</em>'}</div>
         ${metItems ? `<div colspan="2" style="grid-column:1/-1"><span style="color:var(--muted)">Metricas:</span> ${metItems}</div>` : ''}
       </div>
       ${meta.texto_original ? `
@@ -354,20 +371,30 @@ async function abrirModal(id) {
     document.getElementById('m-estado').value = r.estado_procesamiento || 'Crudo';
     document.getElementById('m-notas').value  = r.notas_internas || '';
 
-    // Autocomplete de lugares
+    // Autocomplete de lugares (catálogo fresco)
     document.getElementById('m-lugar-ac').innerHTML = `<div id="m-lugar-ac-i"></div>`;
-    crearAutocomplete('m-lugar-ac-i', lugarObj?.nombre || 'Buscar lugar...', _catLugares,
+    crearAutocomplete('m-lugar-ac-i', lugarObj?.nombre || 'Buscar lugar...',
+      lugares.map(l => ({ id: l._id, nombre: l.nombre })),
       c => { _modalLugarId = c.id; },
       ()=> { _modalLugarId = null; }
     );
 
-    // Autocomplete de ediciones (todas, con año y estado)
-    const todasEdiciones = _catEdiciones.map(e => ({ id: e.id, nombre: e.nombre }));
-    document.getElementById('m-edicion-ac').innerHTML = `<div id="m-edicion-ac-i"></div>`;
-    crearAutocomplete('m-edicion-ac-i', edicionObj?.nombre || 'Buscar edicion por año...', todasEdiciones,
-      c => { _modalEdicionId = c.id; },
-      ()=> { _modalEdicionId = null; }
+    // Autocomplete de evento — al elegir uno, filtra sus ediciones abajo
+    document.getElementById('m-evento-ac').innerHTML = `<div id="m-evento-ac-i"></div>`;
+    crearAutocomplete('m-evento-ac-i', eventoObj?.nombre_oficial || 'Buscar evento...',
+      eventos.map(ev => ({ id: ev._id, nombre: ev.nombre_oficial })),
+      c => { _modalEventoId = c.id; cargarEdicionesModal(c.id, ediciones); },
+      ()=> {
+        _modalEventoId = null; _modalEdicionId = null;
+        document.getElementById('m-edicion-wrap').innerHTML = `<div class="ac-bloqueado">Selecciona primero un evento</div>`;
+      }
     );
+
+    // Si ya tenía evento/edición asignados, precargar el desplegable de ediciones
+    if (eventoObj) {
+      _modalEventoId = eventoObj._id;
+      cargarEdicionesModal(eventoObj._id, ediciones, edicionObj);
+    }
 
     // Mantener valores actuales si ya estaban asignados
     if (lugarId)   _modalLugarId   = lugarId;
@@ -378,9 +405,29 @@ async function abrirModal(id) {
   }
 }
 
+// Ediciones de un evento dentro del modal (misma lógica que el filtro de
+// arriba, pero con los datos ya cargados frescos al abrir el modal).
+function cargarEdicionesModal(eventoId, todasEdiciones, preseleccion = null) {
+  const wrap = document.getElementById('m-edicion-wrap');
+  if (!wrap) return;
+  const delEvento = todasEdiciones.filter(e => String(e.evento_id) === String(eventoId));
+  if (!delEvento.length) {
+    wrap.innerHTML = `<div class="ac-bloqueado">Sin ediciones para este evento</div>`;
+    return;
+  }
+  wrap.innerHTML = `<div id="m-edicion-ac-i"></div>`;
+  const lista = delEvento.map(e => ({ id: e._id, nombre: `${e.anio} — ${e.estado || ''}` }));
+  crearAutocomplete('m-edicion-ac-i',
+    preseleccion ? `${preseleccion.anio} — ${preseleccion.estado || ''}` : 'Buscar edicion...',
+    lista,
+    c => { _modalEdicionId = c.id; },
+    ()=> { _modalEdicionId = null; }
+  );
+}
+
 function cerrarModal() {
   document.getElementById('db-modal').style.display = 'none';
-  _editId = null; _modalLugarId = null; _modalEdicionId = null;
+  _editId = null; _modalLugarId = null; _modalEventoId = null; _modalEdicionId = null;
 }
 
 async function guardarEdicion() {
