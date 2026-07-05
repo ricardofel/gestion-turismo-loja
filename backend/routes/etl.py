@@ -21,7 +21,7 @@ def listar_fuentes():
 
 @router.get("/extraer")
 def extraer_datos(
-    fuente: str = Query(..., description="TikTok | YouTube | Instagram | TripAdvisor | Flickr | Eventbrite | GoogleReviews"),
+    fuente: str = Query(..., description="YouTube"),
     tags  : str = Query("turismo loja", description="Tags separados por coma")
 ):
     """

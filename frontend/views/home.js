@@ -2,6 +2,7 @@
  * views/home.js — Dashboard con estadísticas reales desde /api/stats
  */
 import { apiFetch } from '../components/badges.js';
+import { esTokenVigente } from '../components/nav-state.js';
 
 const COLORES_PLAT = {
   TikTok:        '#9D174D',
@@ -14,7 +15,7 @@ const COLORES_PLAT = {
 };
 const COLOR_DEFAULT = '#64748B';
 
-export async function render(container, { catEventos, catLugares }) {
+export async function render(container, { catEventos, catLugares }, token) {
   container.innerHTML = `<div class="empty"><p>Cargando estadísticas...</p></div>`;
 
   let resumen = null, ingesta = null, statsEventos = null;
@@ -77,6 +78,10 @@ export async function render(container, { catEventos, catLugares }) {
   const eventoTop       = eventosStats.find(e => e.es_mas_popular);
   const totalConEdicion = eventosStats.reduce((s, e) => s + e.recursos, 0);
   const maxEventoRec    = Math.max(...eventosStats.map(e => e.recursos), 1);
+
+  // El usuario ya navegó a otra vista mientras se cargaban los datos —
+  // no pisar el contenido de la vista actual.
+  if (token !== undefined && !esTokenVigente(token)) return;
 
   container.innerHTML = `
     <!-- KPIs -->

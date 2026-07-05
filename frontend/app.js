@@ -8,6 +8,7 @@ import { render as renderETL }      from './views/etl.js';
 import { render as renderLugares }  from './views/lugares.js';
 import { render as renderEventos }  from './views/eventos.js';
 import { apiFetch, toast }          from './components/badges.js';
+import { nuevoToken }               from './components/nav-state.js';
 
 const main = document.getElementById('main');
 
@@ -81,12 +82,14 @@ export function ir(vista) {
 
   if (vista.startsWith('db-')) setDbAbierto(true);
 
+  const token = nuevoToken();
+
   switch (vista) {
-    case 'home':         renderHome(main, state);   break;
-    case 'db-recursos':  renderDB(main, state);     break;
-    case 'db-lugares':   renderLugares(main);       break;
-    case 'db-eventos':   renderEventos(main);       break;
-    case 'etl':          renderETL(main);           break;
+    case 'home':         renderHome(main, state, token); break;
+    case 'db-recursos':  renderDB(main, state);          break;
+    case 'db-lugares':   renderLugares(main);            break;
+    case 'db-eventos':   renderEventos(main);            break;
+    case 'etl':          renderETL(main);                break;
   }
 }
 

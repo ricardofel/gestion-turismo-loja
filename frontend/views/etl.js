@@ -21,13 +21,7 @@ export function render(container) {
         <div class="fg">
           <label>Fuente de datos</label>
           <select class="select" id="etl-fuente" style="width:180px">
-            <option value="TikTok">TikTok</option>
-            <option value="YouTube">YouTube</option>
-            <option value="Instagram">Instagram</option>
-            <option value="TripAdvisor">TripAdvisor</option>
-            <option value="Flickr">Flickr</option>
-            <option value="Eventbrite">Eventbrite</option>
-            <option value="GoogleReviews">Google Reviews</option>
+            <option value="">Cargando...</option>
           </select>
         </div>
         <div class="fg" style="flex:1;min-width:260px">
@@ -69,6 +63,9 @@ export function render(container) {
         </div>
         <div style="display:flex;gap:10px;align-items:center">
           <span id="etl-stats" style="font-size:12px;color:var(--muted)"></span>
+          <button class="btn btn-ghost" id="btn-cancelar" style="display:none">
+            Cancelar
+          </button>
           <button class="btn btn-gold" id="btn-guardar" disabled>
             Guardar en base de datos
           </button>
@@ -122,22 +119,53 @@ export function render(container) {
   // Botones
   document.getElementById('btn-extraer').addEventListener('click', extraer);
   document.getElementById('btn-guardar').addEventListener('click', guardarTodos);
+  document.getElementById('btn-cancelar').addEventListener('click', cancelarResultados);
   document.getElementById('btn-ver-lugares').addEventListener('click', abrirModalLugares);
   document.getElementById('btn-modal-lugares-cancel').addEventListener('click', cerrarModalLugares);
   document.getElementById('btn-modal-lugares-save').addEventListener('click', confirmarLugares);
   document.getElementById('modal-lugares').addEventListener('click', e => {
     if (e.target === document.getElementById('modal-lugares')) cerrarModalLugares();
   });
+
+  cargarFuentes();
+}
+
+// ── Fuentes disponibles ────────────────────────────────────
+// Se cargan del backend (registry.py) para que el selector siempre
+// refleje exactamente qué conectores tienen una API real activada.
+async function cargarFuentes() {
+  const sel = document.getElementById('etl-fuente');
+  try {
+    const d = await apiFetch('/api/etl/fuentes');
+    const fuentes = d.fuentes || [];
+    if (!fuentes.length) {
+      sel.innerHTML = `<option value="">Sin fuentes disponibles</option>`;
+      return;
+    }
+    sel.innerHTML = fuentes.map(f => `<option value="${f.id}">${f.nombre}</option>`).join('');
+  } catch (e) {
+    sel.innerHTML = `<option value="">Error al cargar fuentes</option>`;
+    toast('Error al cargar fuentes: ' + e.message, 'err');
+  }
 }
 
 // ── Tags ─────────────────────────────────────────────────
 function onTagKey(e) {
-  if (e.key !== 'Enter' && e.key !== ',') return;
+  if (e.key !== 'Enter' && e.key !== ',' && e.key !== ' ') return;
   e.preventDefault();
-  const val = e.target.value.trim().replace(/,$/, '');
-  if (!val || tagsActivos.includes(val)) { e.target.value = ''; return; }
+  agregarTagDesdeInput();
+}
+
+// Convierte el texto pendiente del input (si hay) en un tag confirmado.
+// Se usa tanto al presionar Enter/Espacio/coma como al hacer click en
+// "Extraer datos", para que escribir un tag sin confirmarlo no se pierda.
+function agregarTagDesdeInput() {
+  const input = document.getElementById('tag-input');
+  if (!input) return;
+  const val = input.value.trim().replace(/,$/, '');
+  input.value = '';
+  if (!val || tagsActivos.includes(val)) return;
   tagsActivos.push(val);
-  e.target.value = '';
   renderTags();
 }
 
@@ -159,6 +187,7 @@ function renderTags() {
 
 // ── Extracción ────────────────────────────────────────────
 async function extraer() {
+  agregarTagDesdeInput();
   const fuente = document.getElementById('etl-fuente').value;
   const tags   = tagsActivos.join(',') || '';
   const btn    = document.getElementById('btn-extraer');
@@ -217,6 +246,12 @@ function renderTabla() {
     btn.textContent = datosETL.length > 0
       ? `Guardar ${datosETL.length} registro${datosETL.length > 1 ? 's' : ''} en base de datos`
       : 'Guardar en base de datos';
+  }
+
+  // El botón "Cancelar" solo aparece si hay resultados sin guardar
+  const btnCancelar = document.getElementById('btn-cancelar');
+  if (btnCancelar) {
+    btnCancelar.style.display = datosETL.length > 0 ? 'inline-flex' : 'none';
   }
 
   if (!datosETL.length) {
@@ -386,4 +421,14 @@ async function guardarTodos() {
   } finally {
     btn.innerHTML = 'Guardar en base de datos';
   }
+}
+
+// ── Cancelar resultados sin guardar ────────────────────────
+function cancelarResultados() {
+  datosETL      = [];
+  lugaresNuevos = [];
+  document.getElementById('etl-stats').innerHTML = '';
+  document.getElementById('lugares-alert').style.display = 'none';
+  renderTabla();
+  toast('Resultados descartados', 'ok');
 }

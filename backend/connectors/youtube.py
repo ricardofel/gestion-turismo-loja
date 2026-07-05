@@ -1,113 +1,126 @@
 """
-connectors/youtube.py — Conector YouTube con extraer_raw() y 50 registros mock.
+connectors/youtube.py — Conector YouTube con datos reales via YouTube Data API v3.
 
-API REAL: YouTube Data API v3 (gratuita, 10,000 unidades/día)
+API: YouTube Data API v3 (gratuita, 10,000 unidades/día)
   https://console.cloud.google.com/ → APIs & Services → YouTube Data API v3
   Agrega al .env: YOUTUBE_API_KEY=AIza...
+
+Costo de cuota por extracción: 100 (search.list) + 1 (videos.list) = 101 unidades.
+Con 10,000 unidades/día alcanzan ~99 extracciones diarias. Se corta en
+CUOTA_DIARIA_MAXIMA para dejar margen y no dejar la cuota en 0 el resto del día.
 """
-from datetime import datetime, timezone
+import os
+import re
+import requests
+from datetime import datetime, timezone, date
 from .base import ConectorBase
 
-def _ahora():
-    return datetime.now(timezone.utc).isoformat()
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
+BASE_URL = "https://www.googleapis.com/youtube/v3"
 
-VIDEOS_RAW = [
-    # FIAVL
-    {"video_id":"yt_loja_001","title":"FIAVL 2025 - Lo mejor del Festival Internacional de Artes Vivas de Loja","channel":"Loja Cultural TV","description":"Resumen completo del Festival Internacional de Artes Vivas de Loja 2025 con los mejores momentos de teatro, circo y danza internacional.","views":45600,"likes":2340,"comments":189,"date":"2025-11-23","tags":["fiavl","artesvivas","loja","festival","teatro"],"url":"https://youtu.be/yt_loja_001","thumbnail":"","duration":842},
-    {"video_id":"yt_loja_002","title":"Teatro de calle en el FIAVL Loja - Compañías internacionales sorprenden","channel":"Ecuador Viajes","description":"Las mejores actuaciones de teatro callejero del FIAVL 2025: compañías de Colombia, Argentina, México y Brasil en las plazas de Loja.","views":23400,"likes":1120,"comments":98,"date":"2025-11-20","tags":["fiavl","teatrocalle","loja","internacional"],"url":"https://youtu.be/yt_loja_002","thumbnail":"","duration":654},
-    {"video_id":"yt_loja_003","title":"Circo contemporáneo FIAVL Loja 2025 - Acrobacia y fuego","channel":"ArtesVivas Ecuador","description":"Los espectáculos de circo contemporáneo del FIAVL 2025, con acróbatas, malabaristas y fuego en las calles del centro histórico de Loja.","views":34500,"likes":1890,"comments":145,"date":"2025-11-18","tags":["fiavl","circo","acrobacia","loja"],"url":"https://youtu.be/yt_loja_003","thumbnail":"","duration":523},
-    {"video_id":"yt_loja_004","title":"Danza contemporánea en el FIAVL - Grupos de Brasil y Chile","channel":"Cultura Sur","description":"Presentación de grupos de danza contemporánea de Brasil y Chile en el Teatro Benjamín Carrión durante el FIAVL 2025.","views":18900,"likes":934,"comments":76,"date":"2025-11-17","tags":["fiavl","danza","contemporanea","loja","brasil"],"url":"https://youtu.be/yt_loja_004","thumbnail":"","duration":487},
-    {"video_id":"yt_loja_005","title":"FIAVL 2025 - Por qué es el mejor festival de Ecuador","channel":"Destinos Ecuador","description":"Análisis completo del Festival Internacional de Artes Vivas de Loja: historia, artistas, logística y por qué es único en Latinoamérica.","views":56700,"likes":3200,"comments":234,"date":"2025-11-25","tags":["fiavl","loja","festival","ecuador"],"url":"https://youtu.be/yt_loja_005","thumbnail":"","duration":1123},
-    # Romería El Cisne
-    {"video_id":"yt_loja_006","title":"Romería de la Virgen del Cisne 2025 - Miles de peregrinos en Loja","channel":"Fe Ecuador","description":"Cobertura completa de la Romería de la Virgen del Cisne 2025. Desde el inicio del camino hasta la llegada al Santuario de El Cisne.","views":89000,"likes":5600,"comments":456,"date":"2025-08-16","tags":["romeria","ElCisne","loja","fe","virgendecisne"],"url":"https://youtu.be/yt_loja_006","thumbnail":"","duration":1845},
-    {"video_id":"yt_loja_007","title":"El camino a El Cisne - 70 km de fe y devoción","channel":"Tradiciones Ecuador","description":"El recorrido completo de la peregrinación hacia el Santuario de la Virgen del Cisne, patrona de Loja y de toda la región sur del Ecuador.","views":45600,"likes":2780,"comments":234,"date":"2025-08-14","tags":["romeria","ElCisne","peregrinacion","loja"],"url":"https://youtu.be/yt_loja_007","thumbnail":"","duration":2134},
-    {"video_id":"yt_loja_008","title":"Virgen del Cisne - Historia y devoción en el Ecuador","channel":"Historia Sagrada EC","description":"La historia de la Virgen del Cisne, su origen, tradición y la impresionante romería que cada año congrega a miles de fieles en Loja.","views":123000,"likes":7800,"comments":678,"date":"2025-08-10","tags":["virgendecisne","ElCisne","historia","loja","fe"],"url":"https://youtu.be/yt_loja_008","thumbnail":"","duration":1567},
-    # Vilcabamba
-    {"video_id":"yt_loja_009","title":"Vilcabamba - El Valle de la Longevidad en Ecuador","channel":"Naturaleza Ecuador","description":"Descubriendo Vilcabamba, el famoso Valle de la Longevidad en la provincia de Loja. Su microclima, naturaleza y los secretos de la larga vida de sus habitantes.","views":234000,"likes":12300,"comments":1234,"date":"2025-07-15","tags":["Vilcabamba","longevidad","loja","naturaleza","valle"],"url":"https://youtu.be/yt_loja_009","thumbnail":"","duration":1432},
-    {"video_id":"yt_loja_010","title":"Senderismo en Vilcabamba - Rutas y paisajes únicos","channel":"Aventura Sur EC","description":"Las mejores rutas de senderismo en Vilcabamba, Loja. Desde el pueblo hasta los miradores con vistas panorámicas del valle de la longevidad.","views":34500,"likes":1890,"comments":156,"date":"2025-09-08","tags":["Vilcabamba","senderismo","loja","hiking"],"url":"https://youtu.be/yt_loja_010","thumbnail":"","duration":876},
-    {"video_id":"yt_loja_011","title":"Retiro de yoga en Vilcabamba - Una semana de paz y naturaleza","channel":"Wellness Ecuador","description":"Mi experiencia en un retiro de yoga en Vilcabamba. Yoga, meditación, alimentación orgánica y la energía única del valle de la longevidad.","views":67800,"likes":4500,"comments":345,"date":"2025-09-14","tags":["Vilcabamba","yoga","retiro","loja","bienestar"],"url":"https://youtu.be/yt_loja_011","thumbnail":"","duration":1234},
-    # Podocarpus
-    {"video_id":"yt_loja_012","title":"Parque Nacional Podocarpus - El bosque nublado más biodiverso del Ecuador","channel":"EcoEcuador","description":"Explorando el Parque Nacional Podocarpus, uno de los parques más biodiversos del Ecuador. Flora, fauna y los impresionantes ecosistemas del bosque nublado.","views":189000,"likes":9800,"comments":876,"date":"2025-05-20","tags":["Podocarpus","biodiversidad","loja","ecoturismo","naturaleza"],"url":"https://youtu.be/yt_loja_012","thumbnail":"","duration":1876},
-    {"video_id":"yt_loja_013","title":"Avistamiento de aves en Podocarpus - 50 especies en un día","channel":"Birding Ecuador","description":"Registro de más de 50 especies de aves en el Parque Nacional Podocarpus incluyendo el colibrí cola de raqueta y el tucán andino.","views":345000,"likes":18900,"comments":1567,"date":"2025-05-15","tags":["Podocarpus","aves","birding","loja","colibri"],"url":"https://youtu.be/yt_loja_013","thumbnail":"","duration":2345},
-    {"video_id":"yt_loja_014","title":"Trekking en Podocarpus - Ruta Cajanuma completa","channel":"Trekking Ecuador","description":"Recorrido completo de la ruta Cajanuma en el Parque Nacional Podocarpus: páramo, lagunas y vistas espectaculares del sur del Ecuador.","views":45600,"likes":2340,"comments":198,"date":"2025-04-10","tags":["Podocarpus","trekking","Cajanuma","loja","senderismo"],"url":"https://youtu.be/yt_loja_014","thumbnail":"","duration":1543},
-    {"video_id":"yt_loja_015","title":"Orquídeas de Podocarpus - La flora más hermosa del Ecuador","channel":"Flora Andina","description":"Las orquídeas endémicas del Parque Nacional Podocarpus. Una guía completa de las especies más llamativas del bosque nublado de Loja.","views":78900,"likes":4560,"comments":345,"date":"2025-04-22","tags":["Podocarpus","orquideas","flora","loja","botanica"],"url":"https://youtu.be/yt_loja_015","thumbnail":"","duration":987},
-    # Gastronomía
-    {"video_id":"yt_loja_016","title":"Gastronomía lojana - Los 10 platos que debes probar en Loja","channel":"Sabores Ecuador","description":"Guía completa de la gastronomía de Loja: repe lojano, cecina, tamales, humitas y más. Los mejores platos típicos del sur del Ecuador.","views":234000,"likes":12300,"comments":1123,"date":"2025-09-20","tags":["gastronomia","loja","repe","tamales","comidaecuatoriana"],"url":"https://youtu.be/yt_loja_016","thumbnail":"","duration":1234},
-    {"video_id":"yt_loja_017","title":"Cómo preparar el repe lojano auténtico - Receta tradicional","channel":"Cocina Lojana","description":"La receta auténtica del repe blanco lojano, la sopa más representativa de Loja. Ingredientes, preparación y secretos de la abuela.","views":456000,"likes":23400,"comments":2345,"date":"2025-10-05","tags":["repe","gastronomia","loja","receta","cocinalojana"],"url":"https://youtu.be/yt_loja_017","thumbnail":"","duration":876},
-    {"video_id":"yt_loja_018","title":"El mercado de Loja - Colores, sabores y tradición","channel":"Mercados Ecuador","description":"Recorrido por el Mercado Central de Loja: frutas tropicales, comida típica, artesanías y la vibrante vida del mercado lojano.","views":89000,"likes":4560,"comments":412,"date":"2025-07-15","tags":["mercado","loja","gastronomia","frutas","tradicion"],"url":"https://youtu.be/yt_loja_018","thumbnail":"","duration":765},
-    {"video_id":"yt_loja_019","title":"Café de Loja - El mejor café del Ecuador explicado","channel":"Café Ecuador","description":"Por qué el café de la provincia de Loja está entre los mejores del Ecuador. Visita a fincas cafetaleras, proceso de producción y cata.","views":123000,"likes":6780,"comments":567,"date":"2025-08-10","tags":["cafe","loja","cafetalera","coffeeecuador"],"url":"https://youtu.be/yt_loja_019","thumbnail":"","duration":1234},
-    # Turismo Loja general
-    {"video_id":"yt_loja_020","title":"Loja Ecuador - La guía definitiva para visitantes","channel":"Viajes Sur EC","description":"Todo lo que necesitas saber para visitar Loja: qué ver, dónde comer, cómo llegar, cuándo ir y los mejores tips de viaje.","views":345000,"likes":18900,"comments":1678,"date":"2025-09-15","tags":["loja","ecuador","turismo","guia","viaje"],"url":"https://youtu.be/yt_loja_020","thumbnail":"","duration":2134},
-    {"video_id":"yt_loja_021","title":"Loja vs Cuenca - ¿Cuál es mejor para visitar?","channel":"Ecuador Travel","description":"Comparación honesta entre Loja y Cuenca como destinos turísticos. Cultura, gastronomía, naturaleza, costos y calidad de vida.","views":234000,"likes":12300,"comments":2345,"date":"2025-10-01","tags":["loja","cuenca","ecuador","turismo","comparacion"],"url":"https://youtu.be/yt_loja_021","thumbnail":"","duration":1345},
-    {"video_id":"yt_loja_022","title":"Centro histórico de Loja - Arquitectura colonial y cultura","channel":"Patrimonio EC","description":"Recorrido por el centro histórico de Loja: iglesias coloniales, plazas, museos y la rica historia de la capital musical del Ecuador.","views":67800,"likes":3450,"comments":289,"date":"2025-03-28","tags":["loja","centrohistorico","colonial","arquitectura","patrimonio"],"url":"https://youtu.be/yt_loja_022","thumbnail":"","duration":987},
-    {"video_id":"yt_loja_023","title":"Loja capital musical del Ecuador - Su historia musical","channel":"Música Ecuador","description":"Por qué Loja es llamada la capital musical del Ecuador. Historia, tradición musical, músicos famosos y el Museo de la Música de Loja.","views":89000,"likes":4560,"comments":345,"date":"2025-06-15","tags":["loja","musica","capitalmusical","historia","museo"],"url":"https://youtu.be/yt_loja_023","thumbnail":"","duration":1123},
-    {"video_id":"yt_loja_024","title":"Road trip sur del Ecuador - Loja, Vilcabamba y Podocarpus","channel":"Road Trip EC","description":"Road trip épico por el sur del Ecuador visitando Loja, Vilcabamba y el Parque Nacional Podocarpus en 7 días.","views":456000,"likes":23400,"comments":2789,"date":"2025-07-20","tags":["roadtrip","loja","Vilcabamba","Podocarpus","ecuador"],"url":"https://youtu.be/yt_loja_024","thumbnail":"","duration":2567},
-    {"video_id":"yt_loja_025","title":"Loja de noche - La vida nocturna de la ciudad cultural","channel":"Loja Nights","description":"La vida nocturna de Loja: restaurantes, bares, música en vivo y la magia del centro histórico iluminado por la noche.","views":34500,"likes":1780,"comments":156,"date":"2025-10-20","tags":["loja","noche","vida_nocturna","restaurantes","cultura"],"url":"https://youtu.be/yt_loja_025","thumbnail":"","duration":654},
-    # Fiestas de Independencia
-    {"video_id":"yt_loja_026","title":"Fiestas de Independencia de Loja - 18 de noviembre 2024","channel":"Historia Loja","description":"Celebración del 204 aniversario de la independencia de Loja. Desfile cívico-militar, actos culturales y fuegos artificiales en el centro histórico.","views":78900,"likes":4320,"comments":345,"date":"2024-11-18","tags":["independencia","loja","18noviembre","desfile","fiestas"],"url":"https://youtu.be/yt_loja_026","thumbnail":"","duration":1234},
-    {"video_id":"yt_loja_027","title":"El desfile de Loja - Tradición y orgullo en el sur del Ecuador","channel":"Tradiciones Sur","description":"El magnífico desfile cívico del 18 de noviembre en Loja. Colegios, fuerzas armadas, bandas de música y el orgullo de la ciudad.","views":45600,"likes":2340,"comments":198,"date":"2024-11-19","tags":["loja","desfile","independencia","18noviembre","civico"],"url":"https://youtu.be/yt_loja_027","thumbnail":"","duration":987},
-    # Más turismo y naturaleza
-    {"video_id":"yt_loja_028","title":"Catedral de Loja - Joya arquitectónica del sur del Ecuador","channel":"Arquitectura EC","description":"La Catedral de la Inmaculada Concepción de Loja, su historia, arquitectura neogótica y los impresionantes vitrales que la adornan.","views":23400,"likes":1230,"comments":98,"date":"2025-01-25","tags":["catedral","loja","arquitectura","colonial","religion"],"url":"https://youtu.be/yt_loja_028","thumbnail":"","duration":654},
-    {"video_id":"yt_loja_029","title":"Plaza San Sebastián Loja - El corazón cultural de la ciudad","channel":"Loja Cultural","description":"La Plaza San Sebastián, centro neurálgico de la vida cultural de Loja. Eventos, artistas callejeros y el ambiente único de la ciudad.","views":18900,"likes":934,"comments":78,"date":"2025-02-28","tags":["plazasansebastian","loja","cultura","plaza","centrohistorico"],"url":"https://youtu.be/yt_loja_029","thumbnail":"","duration":432},
-    {"video_id":"yt_loja_030","title":"Puerta de la Ciudad de Loja - Bienvenida monumental al sur","channel":"Monumentos EC","description":"La icónica Puerta de la Ciudad de Loja, símbolo de la ciudad y primer monumento que recibe a los visitantes. Historia y arquitectura.","views":34500,"likes":1780,"comments":134,"date":"2025-03-14","tags":["puertaciudad","loja","monumento","arquitectura","simbolo"],"url":"https://youtu.be/yt_loja_030","thumbnail":"","duration":543},
-    {"video_id":"yt_loja_031","title":"Oso de anteojos en Podocarpus - Especie en peligro de extinción","channel":"Wildlife Ecuador","description":"Avistamiento del oso de anteojos en el Parque Nacional Podocarpus. Esta especie en peligro tiene en Podocarpus uno de sus últimos refugios.","views":567000,"likes":34500,"comments":3456,"date":"2025-05-25","tags":["Podocarpus","oso","fauna","loja","conservacion"],"url":"https://youtu.be/yt_loja_031","thumbnail":"","duration":765},
-    {"video_id":"yt_loja_032","title":"Senderismo nocturno en Podocarpus - Fauna nocturna del bosque","channel":"Noche Selvática","description":"Una experiencia única: senderismo nocturno en Podocarpus para avistar la fauna nocturna del bosque nublado de Loja.","views":89000,"likes":4560,"comments":345,"date":"2025-08-05","tags":["Podocarpus","nocturno","senderismo","fauna","loja"],"url":"https://youtu.be/yt_loja_032","thumbnail":"","duration":987},
-    {"video_id":"yt_loja_033","title":"El río en Vilcabamba - Naturaleza y aventura en el valle","channel":"Aventura Vilcabamba","description":"Actividades de aventura en el río de Vilcabamba: kayak, canopy y rappel en plena naturaleza del Valle de la Longevidad.","views":45600,"likes":2340,"comments":198,"date":"2025-10-25","tags":["Vilcabamba","rio","aventura","canopy","loja"],"url":"https://youtu.be/yt_loja_033","thumbnail":"","duration":876},
-    {"video_id":"yt_loja_034","title":"Festival de jazz y blues en Loja - Música para todos","channel":"Jazz Loja","description":"El Festival de Jazz y Blues de Loja en el Teatro Benjamín Carrión. Artistas ecuatorianos e internacionales en una noche mágica.","views":23400,"likes":1230,"comments":98,"date":"2025-08-24","tags":["jazz","blues","loja","festival","musica"],"url":"https://youtu.be/yt_loja_034","thumbnail":"","duration":543},
-    {"video_id":"yt_loja_035","title":"Carnaval de Loja 2025 - Fiesta, música y color","channel":"Fiestas EC","description":"El carnaval lojano, una fiesta llena de música, comparsas, danza y el tradicional juego de agua y espuma en las calles del centro.","views":67800,"likes":3450,"comments":289,"date":"2025-03-04","tags":["carnaval","loja","fiesta","musica","danza"],"url":"https://youtu.be/yt_loja_035","thumbnail":"","duration":765},
-    {"video_id":"yt_loja_036","title":"Museo de la Música de Loja - Instrumentos históricos y tradición","channel":"Museos Ecuador","description":"Visita al Museo de la Música de Loja: instrumentos históricos, exhibiciones interactivas y la historia de la capital musical del Ecuador.","views":34500,"likes":1780,"comments":134,"date":"2025-05-08","tags":["museo","musica","loja","instrumentos","capitalmusical"],"url":"https://youtu.be/yt_loja_036","thumbnail":"","duration":654},
-    {"video_id":"yt_loja_037","title":"Biodiversidad de Podocarpus - Flora y fauna únicas","channel":"Biodiversidad EC","description":"Las especies únicas del Parque Nacional Podocarpus: bromeliáceas, epífitas, anfibios endémicos y la extraordinaria biodiversidad del bosque nublado.","views":78900,"likes":4320,"comments":345,"date":"2025-06-08","tags":["Podocarpus","biodiversidad","flora","fauna","loja"],"url":"https://youtu.be/yt_loja_037","thumbnail":"","duration":1123},
-    {"video_id":"yt_loja_038","title":"FIAVL 2025 - Clausura y mejores momentos del festival","channel":"Loja Cultural TV","description":"La ceremonia de clausura del Festival Internacional de Artes Vivas de Loja 2025 y un resumen de los mejores momentos del evento.","views":45600,"likes":2340,"comments":189,"date":"2025-11-23","tags":["fiavl","clausura","artesvivas","loja","festival"],"url":"https://youtu.be/yt_loja_038","thumbnail":"","duration":1234},
-    {"video_id":"yt_loja_039","title":"Loja desde el aire - Vista aérea con dron de la ciudad","channel":"Drone Ecuador","description":"Impresionante vista aérea de Loja con dron. La ciudad, el valle, los barrios y los alrededores naturales vistas desde el cielo.","views":234000,"likes":12300,"comments":1123,"date":"2025-10-05","tags":["loja","drone","aerea","ciudad","ecuador"],"url":"https://youtu.be/yt_loja_039","thumbnail":"","duration":543},
-    {"video_id":"yt_loja_040","title":"Semana Santa en Loja - Procesiones centenarias","channel":"Tradición Sagrada","description":"Las procesiones de Semana Santa en Loja, una tradición centenaria que congrega a miles de fieles en el centro histórico de la ciudad.","views":56700,"likes":3210,"comments":245,"date":"2025-04-18","tags":["semanasanta","loja","procesion","fe","tradicion"],"url":"https://youtu.be/yt_loja_040","thumbnail":"","duration":987},
-    {"video_id":"yt_loja_041","title":"Artesanías de Loja - Tejidos, cerámica y madera","channel":"Artesanía EC","description":"Las artesanías tradicionales de Loja: tejidos de palma, cerámica y trabajos en madera de los artesanos de la provincia.","views":23400,"likes":1230,"comments":98,"date":"2025-11-10","tags":["artesania","loja","tejidos","ceramica","tradicion"],"url":"https://youtu.be/yt_loja_041","thumbnail":"","duration":654},
-    {"video_id":"yt_loja_042","title":"Casa de la Cultura de Loja - Arte y patrimonio del sur","channel":"Cultura EC","description":"La Casa de la Cultura Benjamín Carrión de Loja: exposiciones, eventos culturales y el legado artístico del sur del Ecuador.","views":18900,"likes":934,"comments":76,"date":"2025-02-10","tags":["casacultura","loja","arte","cultura","patrimonio"],"url":"https://youtu.be/yt_loja_042","thumbnail":"","duration":543},
-    {"video_id":"yt_loja_043","title":"Laguna de Cajanuma - Joya escondida de Podocarpus","channel":"Lagunas Ecuador","description":"La impresionante Laguna de Cajanuma en el Parque Nacional Podocarpus. Cómo llegar, qué ver y los mejores momentos para visitarla.","views":67800,"likes":3450,"comments":289,"date":"2025-03-21","tags":["Podocarpus","laguna","Cajanuma","loja","naturaleza"],"url":"https://youtu.be/yt_loja_043","thumbnail":"","duration":876},
-    {"video_id":"yt_loja_044","title":"El cisne pueblo - Historia y fe en Loja","channel":"Pueblos Ecuador","description":"El pueblo de El Cisne, sede del famoso Santuario de la Virgen del Cisne. Su historia, arquitectura y la devoción que lo caracteriza.","views":45600,"likes":2340,"comments":189,"date":"2025-08-10","tags":["ElCisne","pueblo","santuario","loja","historia"],"url":"https://youtu.be/yt_loja_044","thumbnail":"","duration":765},
-    {"video_id":"yt_loja_045","title":"Ciclismo de montaña en Podocarpus - Ruta extrema","channel":"MTB Ecuador","description":"Ciclismo de montaña por los senderos del Parque Nacional Podocarpus. Una de las rutas más desafiantes del sur del Ecuador.","views":34500,"likes":1780,"comments":145,"date":"2025-08-03","tags":["ciclismo","Podocarpus","MTB","aventura","loja"],"url":"https://youtu.be/yt_loja_045","thumbnail":"","duration":987},
-    {"video_id":"yt_loja_046","title":"Gastronomía callejera en Loja - Street food del sur","channel":"Street Food EC","description":"La gastronomía callejera de Loja: desde los tamales hasta los helados de paila. Tour completo por la comida de calle más sabrosa del sur.","views":89000,"likes":4560,"comments":345,"date":"2025-09-25","tags":["gastronomia","streetfood","loja","tamales","comida"],"url":"https://youtu.be/yt_loja_046","thumbnail":"","duration":876},
-    {"video_id":"yt_loja_047","title":"Loja para mochileros - Guía económica de viaje","channel":"Mochilero EC","description":"Guía completa para visitar Loja con presupuesto reducido: hostales, transporte, comida económica y las atracciones gratuitas de la ciudad.","views":123000,"likes":6780,"comments":567,"date":"2025-08-01","tags":["loja","mochilero","viaje","presupuesto","ecuador"],"url":"https://youtu.be/yt_loja_047","thumbnail":"","duration":1345},
-    {"video_id":"yt_loja_048","title":"Feria del Libro de Loja 2025 - Cultura y conocimiento","channel":"Literatura EC","description":"La Feria Internacional del Libro de Loja 2025 con autores nacionales e internacionales, talleres de escritura y presentaciones literarias.","views":23400,"likes":1230,"comments":98,"date":"2025-10-26","tags":["libro","feria","loja","literatura","cultura"],"url":"https://youtu.be/yt_loja_048","thumbnail":"","duration":654},
-    {"video_id":"yt_loja_049","title":"El FIAVL desde adentro - Cómo se organiza el festival","channel":"Detrás del Arte","description":"Cómo se organiza el Festival Internacional de Artes Vivas de Loja: coordinación de artistas internacionales, logística y el equipo humano detrás del evento.","views":45600,"likes":2340,"comments":189,"date":"2025-11-14","tags":["fiavl","organizacion","artesvivas","loja","behind"],"url":"https://youtu.be/yt_loja_049","thumbnail":"","duration":1123},
-    {"video_id":"yt_loja_050","title":"Loja Ecuador - Por qué esta ciudad me enamoró","channel":"Nómada Digital","description":"Mi historia de amor con Loja: por qué esta ciudad del sur del Ecuador se convirtió en mi lugar favorito. Cultura, gente, naturaleza y vida.","views":345000,"likes":18900,"comments":2345,"date":"2025-10-15","tags":["loja","ecuador","enamorado","viaje","nomada"],"url":"https://youtu.be/yt_loja_050","thumbnail":"","duration":1567},
-]
+CUOTA_DIARIA_MAXIMA = 9000   # de 10,000 reales — deja margen de seguridad
+COSTO_SEARCH = 100
+COSTO_VIDEOS = 1
 
-class ConectorYouTubeMock(ConectorBase):
-    """
-    ══════════════════════════════════════════════════════════
-    CONECTOR YOUTUBE — MODO MOCK
-    ══════════════════════════════════════════════════════════
-    API REAL: YouTube Data API v3 (gratuita, 10,000 unidades/día)
+CACHE_TTL_SEG = 3600  # 1 hora — evita repetir la misma búsqueda y gastar cuota
 
-    1. Crea API Key en: https://console.cloud.google.com/
-       → APIs & Services → Credentials → Create API Key
-       → Activa "YouTube Data API v3"
+_cuota = {"fecha": None, "unidades": 0}
+_cache: dict[str, tuple[float, list[dict]]] = {}
 
-    2. Agrega al .env: YOUTUBE_API_KEY=AIza...
 
-    3. Reemplaza extraer_raw() con llamadas reales al endpoint:
-       GET https://www.googleapis.com/youtube/v3/search
-           ?part=snippet&q={query}&type=video&maxResults=20&key={key}
-       GET https://www.googleapis.com/youtube/v3/videos
-           ?part=statistics&id={ids}&key={key}
-    ══════════════════════════════════════════════════════════
-    """
+def _hoy() -> str:
+    return date.today().isoformat()
+
+
+def _registrar_uso(unidades: int) -> None:
+    if _cuota["fecha"] != _hoy():
+        _cuota["fecha"] = _hoy()
+        _cuota["unidades"] = 0
+    _cuota["unidades"] += unidades
+
+
+def _cuota_disponible(unidades_necesarias: int) -> bool:
+    if _cuota["fecha"] != _hoy():
+        return True
+    return _cuota["unidades"] + unidades_necesarias <= CUOTA_DIARIA_MAXIMA
+
+
+def _parse_duracion_iso(duracion: str) -> int:
+    """Convierte una duración ISO 8601 ('PT4M13S') a segundos."""
+    m = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", duracion or "")
+    if not m:
+        return 0
+    h, mi, s = (int(x) if x else 0 for x in m.groups())
+    return h * 3600 + mi * 60 + s
+
+
+class ConectorYouTubeReal(ConectorBase):
+    """Conector real de YouTube Data API v3."""
     nombre = "YouTube"
 
     def extraer_raw(self, tags: list[str]) -> list[dict]:
-        """Retorna datos en formato nativo YouTube (crudos, sin transformar)."""
-        if not tags:
-            return VIDEOS_RAW
-        q = [t.lower() for t in tags]
-        return [
-            v for v in VIDEOS_RAW
-            if any(
-                t in v["title"].lower() or
-                t in v["description"].lower() or
-                any(t in tag.lower() for tag in v["tags"])
-                for t in q
-            )
-        ]
+        if not YOUTUBE_API_KEY:
+            print("⚠️  YOUTUBE_API_KEY no configurada en backend/.env — sin datos.")
+            return []
+
+        query = f"{' '.join(tags)} Loja Ecuador" if tags else "Loja Ecuador turismo"
+        cache_key = query.lower().strip()
+
+        cacheado = _cache.get(cache_key)
+        if cacheado and (datetime.now(timezone.utc).timestamp() - cacheado[0]) < CACHE_TTL_SEG:
+            return cacheado[1]
+
+        if not _cuota_disponible(COSTO_SEARCH + COSTO_VIDEOS):
+            print(f"⚠️  Cuota diaria de YouTube agotada ({_cuota['unidades']} unidades usadas) — intenta mañana.")
+            return []
+
+        try:
+            r_search = requests.get(f"{BASE_URL}/search", params={
+                "part": "snippet", "q": query, "type": "video",
+                "maxResults": 20, "regionCode": "EC", "relevanceLanguage": "es",
+                "key": YOUTUBE_API_KEY,
+            }, timeout=10)
+            r_search.raise_for_status()
+            _registrar_uso(COSTO_SEARCH)
+
+            ids = [item["id"]["videoId"] for item in r_search.json().get("items", [])]
+            if not ids:
+                _cache[cache_key] = (datetime.now(timezone.utc).timestamp(), [])
+                return []
+
+            r_videos = requests.get(f"{BASE_URL}/videos", params={
+                "part": "snippet,statistics,contentDetails",
+                "id": ",".join(ids), "key": YOUTUBE_API_KEY,
+            }, timeout=10)
+            r_videos.raise_for_status()
+            _registrar_uso(COSTO_VIDEOS)
+
+            resultados = []
+            for v in r_videos.json().get("items", []):
+                sn = v.get("snippet", {})
+                st = v.get("statistics", {})
+                cd = v.get("contentDetails", {})
+                resultados.append({
+                    "video_id"   : v["id"],
+                    "title"      : sn.get("title", ""),
+                    "channel"    : sn.get("channelTitle", ""),
+                    "description": sn.get("description", ""),
+                    "views"      : int(st.get("viewCount", 0) or 0),
+                    "likes"      : int(st.get("likeCount", 0) or 0),
+                    "comments"   : int(st.get("commentCount", 0) or 0),
+                    "date"       : sn.get("publishedAt", "")[:10],
+                    "tags"       : sn.get("tags", []),
+                    "url"        : f"https://youtu.be/{v['id']}",
+                    "thumbnail"  : sn.get("thumbnails", {}).get("high", {}).get("url", ""),
+                    "duration"   : _parse_duracion_iso(cd.get("duration", "")),
+                })
+
+            _cache[cache_key] = (datetime.now(timezone.utc).timestamp(), resultados)
+            return resultados
+
+        except requests.RequestException as e:
+            print(f"⚠️  Error consultando YouTube API: {e}")
+            return []
 
     def extraer(self, tags: list[str]) -> list[dict]:
         return self.extraer_raw(tags)
