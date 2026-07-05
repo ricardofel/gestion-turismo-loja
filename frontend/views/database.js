@@ -371,29 +371,35 @@ async function abrirModal(id) {
     document.getElementById('m-estado').value = r.estado_procesamiento || 'Crudo';
     document.getElementById('m-notas').value  = r.notas_internas || '';
 
-    // Autocomplete de lugares (catálogo fresco)
+    // Autocomplete de lugares (catálogo fresco) — si el recurso ya tiene
+    // lugar asignado, se muestra como valor real seleccionado, no como placeholder.
     document.getElementById('m-lugar-ac').innerHTML = `<div id="m-lugar-ac-i"></div>`;
-    crearAutocomplete('m-lugar-ac-i', lugarObj?.nombre || 'Buscar lugar...',
+    crearAutocomplete('m-lugar-ac-i', 'Buscar lugar...',
       lugares.map(l => ({ id: l._id, nombre: l.nombre })),
       c => { _modalLugarId = c.id; },
-      ()=> { _modalLugarId = null; }
+      ()=> { _modalLugarId = null; },
+      lugarObj ? { id: lugarObj._id, nombre: lugarObj.nombre } : null
     );
 
     // Autocomplete de evento — al elegir uno, filtra sus ediciones abajo
     document.getElementById('m-evento-ac').innerHTML = `<div id="m-evento-ac-i"></div>`;
-    crearAutocomplete('m-evento-ac-i', eventoObj?.nombre_oficial || 'Buscar evento...',
+    crearAutocomplete('m-evento-ac-i', 'Buscar evento...',
       eventos.map(ev => ({ id: ev._id, nombre: ev.nombre_oficial })),
       c => { _modalEventoId = c.id; cargarEdicionesModal(c.id, ediciones); },
       ()=> {
         _modalEventoId = null; _modalEdicionId = null;
         document.getElementById('m-edicion-wrap').innerHTML = `<div class="ac-bloqueado">Selecciona primero un evento</div>`;
-      }
+      },
+      eventoObj ? { id: eventoObj._id, nombre: eventoObj.nombre_oficial } : null
     );
 
     // Si ya tenía evento/edición asignados, precargar el desplegable de ediciones
     if (eventoObj) {
       _modalEventoId = eventoObj._id;
       cargarEdicionesModal(eventoObj._id, ediciones, edicionObj);
+    } else {
+      document.getElementById('m-edicion-wrap').innerHTML =
+        `<div class="ac-bloqueado">Aún no está relacionado con ningún evento</div>`;
     }
 
     // Mantener valores actuales si ya estaban asignados
@@ -417,11 +423,11 @@ function cargarEdicionesModal(eventoId, todasEdiciones, preseleccion = null) {
   }
   wrap.innerHTML = `<div id="m-edicion-ac-i"></div>`;
   const lista = delEvento.map(e => ({ id: e._id, nombre: `${e.anio} — ${e.estado || ''}` }));
-  crearAutocomplete('m-edicion-ac-i',
-    preseleccion ? `${preseleccion.anio} — ${preseleccion.estado || ''}` : 'Buscar edicion...',
+  crearAutocomplete('m-edicion-ac-i', 'Buscar edicion...',
     lista,
     c => { _modalEdicionId = c.id; },
-    ()=> { _modalEdicionId = null; }
+    ()=> { _modalEdicionId = null; },
+    preseleccion ? { id: preseleccion._id, nombre: `${preseleccion.anio} — ${preseleccion.estado || ''}` } : null
   );
 }
 

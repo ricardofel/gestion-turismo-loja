@@ -12,6 +12,7 @@ Flujo:
 """
 from datetime import datetime, timezone
 from bson import ObjectId
+from pymongo import ReturnDocument
 from ..database import get_col, COL_RECURSO, COL_LUGAR, COL_EDICION, COL_EVENTO
 
 
@@ -150,13 +151,28 @@ def _anio(fecha_pub: str | None) -> int | None:
         return None
 
 
+def _estado_por_anio(anio: int) -> str:
+    """Calcula el estado de una edición comparando su año contra el año actual."""
+    hoy = datetime.now(timezone.utc).year
+    if anio < hoy:
+        return "Finalizada"
+    if anio > hoy:
+        return "Planificada"
+    return "En curso"
+
+
 def detectar_edicion(recurso: dict, ediciones: list[dict], eventos: list[dict]) -> str | None:
     """
     Asigna edicion_id basándose en:
     1. El año de fecha_publicacion del recurso
-    2. Las palabras clave del evento que aparecen en el texto/hashtags
+    2. Las palabras clave del evento que más aparecen en el texto/hashtags
 
-    Prioriza: evento con más palabras clave coincidentes + año exacto.
+    Si el evento coincide pero no existe una edición para ese año, la crea
+    automáticamente (estado calculado por calendario: Finalizada/En curso/
+    Planificada según el año detectado vs el año actual). `ediciones` se
+    actualiza en el sitio para que, dentro de la misma corrida del pipeline,
+    otros recursos del mismo evento+año reutilicen la edición recién creada
+    en vez de crear una duplicada.
     """
     anio = _anio(recurso.get("fecha_publicacion"))
     if not anio:
@@ -167,26 +183,45 @@ def detectar_edicion(recurso: dict, ediciones: list[dict], eventos: list[dict]) 
     hashtags = [h.lower() for h in (meta.get("hashtags") or [])]
     contenido = texto + " " + " ".join(hashtags)
 
-    mejor_score    = 0
-    mejor_edicion  = None
-
+    mejor_score  = 0
+    mejor_evento = None
     for evento in eventos:
         palabras_clave = [p.lower() for p in (evento.get("palabras_clave") or [])]
         if not palabras_clave:
             continue
         score = sum(1 for p in palabras_clave if p in contenido)
-        if score == 0:
-            continue
+        if score > mejor_score:
+            mejor_score  = score
+            mejor_evento = evento
 
-        # Buscar edición de ese evento en el año correcto
-        for edicion in ediciones:
-            ev_id_str = str(edicion.get("evento_id") or "")
-            if ev_id_str == str(evento.get("_id") or ""):
-                if edicion.get("anio") == anio and score > mejor_score:
-                    mejor_score   = score
-                    mejor_edicion = str(edicion.get("_id"))
+    if not mejor_evento:
+        return None
 
-    return mejor_edicion
+    evento_id = mejor_evento["_id"]
+
+    # ¿Ya existe una edición de ese evento para ese año?
+    for edicion in ediciones:
+        if str(edicion.get("evento_id") or "") == str(evento_id) and edicion.get("anio") == anio:
+            return str(edicion["_id"])
+
+    # No existe — se crea automáticamente (upsert atómico para evitar
+    # duplicados si dos recursos del mismo evento+año se procesan a la vez).
+    nueva = get_col(COL_EDICION).find_one_and_update(
+        {"evento_id": evento_id, "anio": anio},
+        {"$setOnInsert": {
+            "evento_id"      : evento_id,
+            "anio"           : anio,
+            "estado"         : _estado_por_anio(anio),
+            "fecha_inicio"   : None,
+            "fecha_fin"      : None,
+            "creado_en"      : datetime.now(timezone.utc),
+            "creada_por_etl" : True,
+        }},
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    ediciones.append(nueva)
+    return str(nueva["_id"])
 
 
 # ── Pipeline principal ────────────────────────────────────

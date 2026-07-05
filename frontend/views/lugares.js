@@ -22,6 +22,7 @@ export async function render(container) {
             <span class="card-label" style="margin:0">Lugares registrados</span>
             <span id="lug-total" style="font-size:12px;color:var(--muted)"></span>
           </div>
+          <input class="input" id="lug-buscar" placeholder="Buscar por nombre, tipo o dirección..." style="margin-bottom:14px">
           <div id="lug-lista"></div>
         </div>
       </div>
@@ -94,54 +95,76 @@ export async function render(container) {
   document.getElementById('modal-del-lug').addEventListener('click', e => {
     if (e.target === document.getElementById('modal-del-lug')) cerrarModalLug();
   });
+  document.getElementById('lug-buscar').addEventListener('input', e => filtrarLugares(e.target.value));
 
   await cargarLugares();
 }
 
-let editandoId = null;
+let editandoId    = null;
+let _todosLugares = [];
 
 async function cargarLugares() {
   const lista = document.getElementById('lug-lista');
   lista.innerHTML = `<div class="empty"><p>Cargando...</p></div>`;
   try {
     const d = await apiFetch('/api/lugares');
+    _todosLugares = d.data || [];
     document.getElementById('lug-total').textContent = `${d.total} registrados`;
-    if (!d.data.length) {
-      lista.innerHTML = `<div class="empty"><p>No hay lugares. Agrega el primero.</p></div>`;
-      return;
-    }
-    lista.innerHTML = d.data.map(l => `
-      <div class="rec-card" style="grid-template-columns:1fr auto">
-        <div class="rec-main">
-          <div class="rec-titulo">${l.nombre}</div>
-          <div class="rec-meta" style="margin-top:4px">
-            <span class="badge b-mock">${l.tipo_lugar || 'Sin tipo'}</span>
-            ${l.direccion_texto
-              ? `<span style="font-size:11px;color:var(--muted)">${l.direccion_texto}</span>`
-              : ''}
-            ${l.coordenadas_geo?.coordinates
-              ? `<span style="font-size:11px;color:var(--muted)">
-                  📍 ${l.coordenadas_geo.coordinates[1]}, ${l.coordenadas_geo.coordinates[0]}
-                </span>`
-              : `<span style="font-size:11px;color:#ccc;font-style:italic">Sin coordenadas</span>`}
-          </div>
-        </div>
-        <div class="rec-actions">
-          <button class="btn btn-ghost btn-sm" data-id="${l._id}" data-action="editar-lug">Editar</button>
-          <button class="btn btn-danger-soft btn-sm" data-id="${l._id}" data-nombre="${l.nombre}" data-action="eliminar-lug">Eliminar</button>
-        </div>
-      </div>
-    `).join('');
-
-    lista.querySelectorAll('[data-action="editar-lug"]').forEach(btn =>
-      btn.addEventListener('click', () => cargarEdicion(btn.dataset.id))
-    );
-    lista.querySelectorAll('[data-action="eliminar-lug"]').forEach(btn =>
-      btn.addEventListener('click', () => confirmarEliminar(btn.dataset.id, btn.dataset.nombre))
-    );
+    renderListaLugares(_todosLugares);
   } catch (e) {
     lista.innerHTML = `<div class="empty"><p style="color:var(--red)">Error: ${e.message}</p></div>`;
   }
+}
+
+function filtrarLugares(texto) {
+  const q = texto.trim().toLowerCase();
+  const filtrados = !q ? _todosLugares : _todosLugares.filter(l =>
+    (l.nombre || '').toLowerCase().includes(q) ||
+    (l.tipo_lugar || '').toLowerCase().includes(q) ||
+    (l.direccion_texto || '').toLowerCase().includes(q)
+  );
+  renderListaLugares(filtrados, q);
+}
+
+function renderListaLugares(lugares, filtroActivo = '') {
+  const lista = document.getElementById('lug-lista');
+
+  if (!lugares.length) {
+    lista.innerHTML = filtroActivo
+      ? `<div class="empty"><p>Sin resultados para "${filtroActivo}".</p></div>`
+      : `<div class="empty"><p>No hay lugares. Agrega el primero.</p></div>`;
+    return;
+  }
+
+  lista.innerHTML = lugares.map(l => `
+    <div class="rec-card" style="grid-template-columns:1fr auto">
+      <div class="rec-main">
+        <div class="rec-titulo">${l.nombre}</div>
+        <div class="rec-meta" style="margin-top:4px">
+          <span class="badge b-mock">${l.tipo_lugar || 'Sin tipo'}</span>
+          ${l.direccion_texto
+            ? `<span style="font-size:11px;color:var(--muted)">${l.direccion_texto}</span>`
+            : ''}
+          ${l.coordenadas_geo?.coordinates
+            ? `<span style="font-size:11px;color:var(--muted)">
+                📍 ${l.coordenadas_geo.coordinates[1]}, ${l.coordenadas_geo.coordinates[0]}
+              </span>`
+            : `<span style="font-size:11px;color:#ccc;font-style:italic">Sin coordenadas</span>`}
+        </div>
+      </div>
+      <div class="rec-actions">
+        <button class="btn btn-ghost btn-sm" data-id="${l._id}" data-action="editar-lug">Editar</button>
+        <button class="btn btn-danger-soft btn-sm" data-id="${l._id}" data-nombre="${l.nombre}" data-action="eliminar-lug">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+
+  lista.querySelectorAll('[data-action="editar-lug"]').forEach(btn =>
+    btn.addEventListener('click', () => cargarEdicion(btn.dataset.id))
+  );
+  lista.querySelectorAll('[data-action="eliminar-lug"]').forEach(btn =>
+    btn.addEventListener('click', () => confirmarEliminar(btn.dataset.id, btn.dataset.nombre))
+  );
 }
 
 async function cargarEdicion(id) {

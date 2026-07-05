@@ -22,6 +22,7 @@ export async function render(container) {
             <span class="card-label" style="margin:0">Eventos registrados</span>
             <span id="ev-total" style="font-size:12px;color:var(--muted)"></span>
           </div>
+          <input class="input" id="ev-buscar" placeholder="Buscar por nombre o categoría..." style="margin-bottom:14px">
           <div id="ev-lista"></div>
         </div>
       </div>
@@ -154,6 +155,7 @@ export async function render(container) {
   document.getElementById('btn-ev-cancelar').addEventListener('click', resetFormEvento);
   document.getElementById('btn-ed-guardar').addEventListener('click', guardarEdicion);
   document.getElementById('btn-ed-cancelar').addEventListener('click', resetFormEdicion);
+  document.getElementById('ev-buscar').addEventListener('input', e => filtrarEventos(e.target.value));
 
   await cargarEventos();
 }
@@ -162,6 +164,7 @@ export async function render(container) {
 let editandoEvId  = null;
 let editandoEdId  = null;
 let eventoActivo  = null;   // { id, nombre }
+let _todosEventos = [];
 
 // ── Eventos ───────────────────────────────────────────────
 async function cargarEventos() {
@@ -169,52 +172,71 @@ async function cargarEventos() {
   lista.innerHTML = `<div class="empty"><p>Cargando...</p></div>`;
   try {
     const d = await apiFetch('/api/eventos');
+    _todosEventos = d.data || [];
     document.getElementById('ev-total').textContent = `${d.total} registrados`;
-    if (!d.data.length) {
-      lista.innerHTML = `<div class="empty"><p>No hay eventos. Agrega el primero.</p></div>`;
-      return;
-    }
-    lista.innerHTML = d.data.map(ev => `
-      <div class="rec-card" id="ev-card-${ev._id}" style="grid-template-columns:1fr auto;cursor:default">
-        <div class="rec-main">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="rec-titulo">${ev.nombre_oficial}</span>
-            ${ev.activo
-              ? `<span class="badge b-clasificado" style="font-size:10px">Activo</span>`
-              : `<span class="badge b-error" style="font-size:10px">Inactivo</span>`}
-          </div>
-          <div class="rec-meta" style="margin-top:4px">
-            <span class="badge b-mock">${ev.categoria || 'Sin categoría'}</span>
-            ${ev.descripcion_general
-              ? `<span style="font-size:11px;color:var(--muted)">${ev.descripcion_general.slice(0,60)}${ev.descripcion_general.length>60?'...':''}</span>`
-              : ''}
-          </div>
-          <div style="margin-top:6px">
-            <button class="btn btn-ghost btn-sm" data-id="${ev._id}" data-nombre="${ev.nombre_oficial}" data-action="ver-ediciones"
-              style="font-size:11px">
-              Ver ediciones
-            </button>
-          </div>
-        </div>
-        <div class="rec-actions">
-          <button class="btn btn-ghost btn-sm" data-id="${ev._id}" data-action="editar-ev">Editar</button>
-          <button class="btn btn-danger-soft btn-sm" data-id="${ev._id}" data-nombre="${ev.nombre_oficial}" data-action="eliminar-ev">Eliminar</button>
-        </div>
-      </div>
-    `).join('');
-
-    lista.querySelectorAll('[data-action="editar-ev"]').forEach(btn =>
-      btn.addEventListener('click', () => cargarEdicionEvento(btn.dataset.id))
-    );
-    lista.querySelectorAll('[data-action="eliminar-ev"]').forEach(btn =>
-      btn.addEventListener('click', () => confirmarEliminarEvento(btn.dataset.id, btn.dataset.nombre))
-    );
-    lista.querySelectorAll('[data-action="ver-ediciones"]').forEach(btn =>
-      btn.addEventListener('click', () => abrirPanelEdiciones(btn.dataset.id, btn.dataset.nombre))
-    );
+    renderListaEventos(_todosEventos);
   } catch(e) {
     lista.innerHTML = `<div class="empty"><p style="color:var(--red)">Error: ${e.message}</p></div>`;
   }
+}
+
+function filtrarEventos(texto) {
+  const q = texto.trim().toLowerCase();
+  const filtrados = !q ? _todosEventos : _todosEventos.filter(ev =>
+    (ev.nombre_oficial || '').toLowerCase().includes(q) ||
+    (ev.categoria || '').toLowerCase().includes(q)
+  );
+  renderListaEventos(filtrados, q);
+}
+
+function renderListaEventos(eventos, filtroActivo = '') {
+  const lista = document.getElementById('ev-lista');
+
+  if (!eventos.length) {
+    lista.innerHTML = filtroActivo
+      ? `<div class="empty"><p>Sin resultados para "${filtroActivo}".</p></div>`
+      : `<div class="empty"><p>No hay eventos. Agrega el primero.</p></div>`;
+    return;
+  }
+
+  lista.innerHTML = eventos.map(ev => `
+    <div class="rec-card" id="ev-card-${ev._id}" style="grid-template-columns:1fr auto;cursor:default">
+      <div class="rec-main">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="rec-titulo">${ev.nombre_oficial}</span>
+          ${ev.activo
+            ? `<span class="badge b-clasificado" style="font-size:10px">Activo</span>`
+            : `<span class="badge b-error" style="font-size:10px">Inactivo</span>`}
+        </div>
+        <div class="rec-meta" style="margin-top:4px">
+          <span class="badge b-mock">${ev.categoria || 'Sin categoría'}</span>
+          ${ev.descripcion_general
+            ? `<span style="font-size:11px;color:var(--muted)">${ev.descripcion_general.slice(0,60)}${ev.descripcion_general.length>60?'...':''}</span>`
+            : ''}
+        </div>
+        <div style="margin-top:6px">
+          <button class="btn btn-ghost btn-sm" data-id="${ev._id}" data-nombre="${ev.nombre_oficial}" data-action="ver-ediciones"
+            style="font-size:11px">
+            Ver ediciones
+          </button>
+        </div>
+      </div>
+      <div class="rec-actions">
+        <button class="btn btn-ghost btn-sm" data-id="${ev._id}" data-action="editar-ev">Editar</button>
+        <button class="btn btn-danger-soft btn-sm" data-id="${ev._id}" data-nombre="${ev.nombre_oficial}" data-action="eliminar-ev">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+
+  lista.querySelectorAll('[data-action="editar-ev"]').forEach(btn =>
+    btn.addEventListener('click', () => cargarEdicionEvento(btn.dataset.id))
+  );
+  lista.querySelectorAll('[data-action="eliminar-ev"]').forEach(btn =>
+    btn.addEventListener('click', () => confirmarEliminarEvento(btn.dataset.id, btn.dataset.nombre))
+  );
+  lista.querySelectorAll('[data-action="ver-ediciones"]').forEach(btn =>
+    btn.addEventListener('click', () => abrirPanelEdiciones(btn.dataset.id, btn.dataset.nombre))
+  );
 }
 
 async function cargarEdicionEvento(id) {
