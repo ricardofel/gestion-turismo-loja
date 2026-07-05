@@ -2,6 +2,8 @@
  * views/eventos.js — CRUD completo de Eventos y sus Ediciones.
  */
 import { apiFetch, toast } from '../components/badges.js';
+import { buscarSimilares } from '../components/similitud.js';
+import { confirmarModal } from '../components/confirm-modal.js';
 
 const CATEGORIAS = [
   "Cultura y Arte", "Religioso", "Cívico", "Gastronomía",
@@ -236,6 +238,22 @@ async function cargarEdicionEvento(id) {
 async function guardarEvento() {
   const nombre = document.getElementById('ev-nombre').value.trim();
   if (!nombre) { toast('El nombre oficial es obligatorio', 'err'); return; }
+
+  try {
+    const d = await apiFetch('/api/eventos');
+    const similares = buscarSimilares(nombre, d.data, { excluirId: editandoEvId, campoNombre: 'nombre_oficial' });
+    if (similares.length) {
+      const top = similares[0].item;
+      const continuar = await confirmarModal({
+        titulo         : 'Posible evento duplicado',
+        mensaje        : `Ya existe un evento con un nombre muy parecido:\n"${top.nombre_oficial}" (${top.categoria || 'sin categoría'})\n\n¿Guardar "${nombre}" de todas formas?`,
+        textoConfirmar : 'Guardar de todas formas',
+      });
+      if (!continuar) return;
+    }
+  } catch (e) {
+    console.warn('No se pudo verificar eventos parecidos:', e);
+  }
 
   const tagsRaw = document.getElementById('ev-tags').value;
   const tags    = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);

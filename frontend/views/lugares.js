@@ -2,6 +2,8 @@
  * views/lugares.js — CRUD completo de Lugares.
  */
 import { apiFetch, toast } from '../components/badges.js';
+import { buscarSimilares } from '../components/similitud.js';
+import { confirmarModal } from '../components/confirm-modal.js';
 
 const TIPOS_LUGAR = [
   "Teatro", "Santuario", "Iglesia", "Plaza Pública", "Museo",
@@ -164,6 +166,24 @@ async function cargarEdicion(id) {
 async function guardarLugar() {
   const nombre = document.getElementById('lug-nombre').value.trim();
   if (!nombre) { toast('El nombre es obligatorio', 'err'); return; }
+
+  try {
+    const d = await apiFetch('/api/lugares');
+    const similares = buscarSimilares(nombre, d.data, { excluirId: editandoId });
+    if (similares.length) {
+      const top = similares[0].item;
+      const continuar = await confirmarModal({
+        titulo         : 'Posible lugar duplicado',
+        mensaje        : `Ya existe un lugar con un nombre muy parecido:\n"${top.nombre}" (${top.tipo_lugar || 'sin tipo'})\n\n¿Guardar "${nombre}" de todas formas?`,
+        textoConfirmar : 'Guardar de todas formas',
+      });
+      if (!continuar) return;
+    }
+  } catch (e) {
+    // Si falla la verificación no bloqueamos el guardado, pero lo dejamos
+    // visible en consola para poder diagnosticarlo.
+    console.warn('No se pudo verificar lugares parecidos:', e);
+  }
 
   const payload = {
     nombre,

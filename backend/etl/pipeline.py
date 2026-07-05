@@ -25,227 +25,10 @@ STOP_WORDS = {
 }
 
 # ── Transformadores por fuente ────────────────────────────
-
-def _ts(s: str) -> str:
-    """Normaliza timestamp ISO."""
-    if not s:
-        return datetime.now(timezone.utc).isoformat()
-    return s if s.endswith("Z") or "+" in s else s + "Z"
-
-def _fecha_pub(s: str) -> str | None:
-    """Extrae YYYY-MM-DD de un timestamp."""
-    if not s:
-        return None
-    return s[:10]
-
-def _anio(fecha_pub: str | None) -> int | None:
-    """Extrae el año de una fecha publicación."""
-    if not fecha_pub or len(fecha_pub) < 4:
-        return None
-    try:
-        return int(fecha_pub[:4])
-    except ValueError:
-        return None
-
-
-def transform_tiktok(raw: dict) -> dict:
-    """Normaliza dato crudo de TikTok al esquema RecursoSchema."""
-    return {
-        "origen": {
-            "plataforma"    : "TikTok",
-            "formato"       : "video",
-            "id_externo"    : str(raw.get("id") or raw.get("id_externo") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("location") or raw.get("ubicacion_cruda"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : _fecha_pub(raw.get("timestamp") or raw.get("fecha_publicacion")),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "likes"      : raw.get("likes") or raw.get("metricas", {}).get("likes", 0),
-                "shares"     : raw.get("shares") or raw.get("metricas", {}).get("shares", 0),
-                "plays"      : raw.get("plays") or raw.get("metricas", {}).get("plays", 0),
-                "guardados"  : raw.get("guardados") or raw.get("metricas", {}).get("guardados", 0),
-                "comentarios": raw.get("comentarios") or raw.get("metricas", {}).get("comentarios", 0),
-            },
-            "autor": {
-                "name"     : raw.get("user") or raw.get("autor", {}).get("name", "—"),
-                "verified" : raw.get("verified", False),
-                "fans"     : raw.get("fans", 0),
-                "heart"    : raw.get("heart", 0),
-                "video"    : raw.get("video", 0),
-                "following": raw.get("following", 0),
-                "friends"  : raw.get("friends", 0),
-                "signature": raw.get("signature", ""),
-            },
-            "texto_original" : raw.get("caption") or raw.get("texto_original", ""),
-            "hashtags"       : raw.get("hashtags", []),
-            "urls"           : raw.get("urls", {"video": "", "cover": ""}),
-            "video"          : raw.get("video", {"duracion_seg": 0, "cover_url": ""}),
-            "musica"         : raw.get("musica", {"nombre": "", "autor": ""}),
-            "idioma"         : raw.get("idioma", "es"),
-            "es_anuncio"     : raw.get("es_anuncio", False),
-            "es_patrocinado" : raw.get("es_patrocinado", False),
-            "hora_publicacion": raw.get("hora_publicacion", ""),
-        }
-    }
-
-
-def transform_instagram(raw: dict) -> dict:
-    """Normaliza dato crudo de Instagram al esquema RecursoSchema."""
-    return {
-        "origen": {
-            "plataforma"    : "Instagram",
-            "formato"       : "post",
-            "id_externo"    : str(raw.get("id") or raw.get("photo_id") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("location"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : _fecha_pub(raw.get("timestamp") or raw.get("date_taken")),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "likes"      : raw.get("likes", 0),
-                "comentarios": raw.get("comments", 0),
-                "plays"      : 0,
-            },
-            "autor": {
-                "name"    : raw.get("user") or raw.get("owner", "—"),
-                "verified": False,
-            },
-            "texto_original": raw.get("caption") or raw.get("description", ""),
-            "hashtags"      : raw.get("hashtags", []),
-            "urls"          : {"video": "", "cover": raw.get("cover_url", "")},
-            "video"         : {"duracion_seg": 0, "cover_url": ""},
-            "musica"        : {"nombre": "", "autor": ""},
-            "idioma"        : "es",
-            "es_anuncio"    : False,
-            "es_patrocinado": False,
-            "hora_publicacion": "",
-        }
-    }
-
-
-def transform_tripadvisor(raw: dict) -> dict:
-    """Normaliza reseña cruda de TripAdvisor al esquema RecursoSchema."""
-    return {
-        "origen": {
-            "plataforma"    : "TripAdvisor",
-            "formato"       : "reseña",
-            "id_externo"    : str(raw.get("review_id") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("location_name"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : raw.get("date"),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "likes"      : raw.get("helpful_votes", 0),
-                "comentarios": 0,
-                "plays"      : 0,
-            },
-            "autor": {
-                "name"    : raw.get("author", "—"),
-                "verified": False,
-            },
-            "texto_original": f"{raw.get('title','')}: {raw.get('text','')}",
-            "hashtags"      : [],
-            "urls"          : {"video": "", "cover": ""},
-            "video"         : {"duracion_seg": 0, "cover_url": ""},
-            "musica"        : {"nombre": "", "autor": ""},
-            "idioma"        : "es",
-            "es_anuncio"    : False,
-            "es_patrocinado": False,
-            "hora_publicacion": "",
-            "estrellas"     : raw.get("rating", 0),
-            "tipo_lugar"    : raw.get("location_type", ""),
-        }
-    }
-
-
-def transform_flickr(raw: dict) -> dict:
-    """Normaliza foto cruda de Flickr al esquema RecursoSchema."""
-    geo = raw.get("geo", {})
-    return {
-        "origen": {
-            "plataforma"    : "Flickr",
-            "formato"       : "imagen",
-            "id_externo"    : str(raw.get("photo_id") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("place"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : raw.get("date_taken"),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "plays"   : raw.get("views", 0),
-                "likes"   : raw.get("favorites", 0),
-                "comentarios": 0,
-            },
-            "autor": {
-                "name"    : raw.get("owner", "—"),
-                "verified": False,
-            },
-            "texto_original": f"{raw.get('title','')}: {raw.get('description','')}",
-            "hashtags"      : raw.get("tags", []),
-            "urls"          : {"video": "", "cover": raw.get("url_m", "")},
-            "video"         : {"duracion_seg": 0, "cover_url": raw.get("url_m", "")},
-            "musica"        : {"nombre": "", "autor": ""},
-            "idioma"        : "es",
-            "es_anuncio"    : False,
-            "es_patrocinado": False,
-            "hora_publicacion": "",
-            "coordenadas"   : geo,
-        }
-    }
-
-
-def transform_eventbrite(raw: dict) -> dict:
-    """Normaliza evento crudo de Eventbrite al esquema RecursoSchema."""
-    return {
-        "origen": {
-            "plataforma"    : "Eventbrite",
-            "formato"       : "articulo",
-            "id_externo"    : str(raw.get("event_id") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("venue"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : _fecha_pub(raw.get("start")),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "plays"      : raw.get("attendees_capacity", 0),
-                "likes"      : raw.get("tickets_sold", 0),
-                "comentarios": 0,
-            },
-            "autor": {
-                "name"    : raw.get("organizer", "—"),
-                "verified": True,
-            },
-            "texto_original": f"{raw.get('name','')}: {raw.get('description','')}",
-            "hashtags"      : raw.get("tags", []),
-            "urls"          : {"video": "", "cover": ""},
-            "video"         : {"duracion_seg": 0, "cover_url": ""},
-            "musica"        : {"nombre": "", "autor": ""},
-            "idioma"        : "es",
-            "es_anuncio"    : False,
-            "es_patrocinado": raw.get("is_free", True) is False,
-            "hora_publicacion": "",
-            "estado_evento" : raw.get("status", ""),
-            "categoria"     : raw.get("category", ""),
-        }
-    }
-
+# Solo existe el de la fuente con API real activa (YouTube). Para reactivar
+# una fuente antigua o agregar una nueva, ver guia_implementacion_apis.md —
+# ahí está el patrón completo (transform_* + entrada en TRANSFORMERS +
+# conector en backend/connectors/ + entrada en PLATAFORMAS_VALIDAS).
 
 def transform_youtube(raw: dict) -> dict:
     """Normaliza dato crudo de YouTube al esquema RecursoSchema."""
@@ -284,55 +67,9 @@ def transform_youtube(raw: dict) -> dict:
     }
 
 
-def transform_google_reviews(raw: dict) -> dict:
-    """Normaliza reseña cruda de Google Reviews al esquema RecursoSchema."""
-    return {
-        "origen": {
-            "plataforma"    : "GoogleReviews",
-            "formato"       : "reseña",
-            "id_externo"    : str(raw.get("review_id") or ""),
-            "fecha_ingesta" : datetime.now(timezone.utc).isoformat(),
-            "ubicacion_cruda": raw.get("location") or raw.get("place_name"),
-        },
-        "estado_procesamiento": "Crudo",
-        "fecha_publicacion"   : raw.get("date"),
-        "edicion_id"          : None,
-        "lugar_id"            : None,
-        "metadata": {
-            "metricas": {
-                "likes"      : raw.get("rating", 0),
-                "comentarios": 0,
-                "plays"      : 0,
-            },
-            "autor": {
-                "name"    : raw.get("author_name", "—"),
-                "verified": False,
-            },
-            "texto_original": raw.get("text", ""),
-            "hashtags"      : [],
-            "urls"          : {"video": "", "cover": ""},
-            "video"         : {"duracion_seg": 0, "cover_url": ""},
-            "musica"        : {"nombre": "", "autor": ""},
-            "idioma"        : "es",
-            "es_anuncio"    : False,
-            "es_patrocinado": False,
-            "hora_publicacion": "",
-            "estrellas"     : raw.get("rating", 0),
-            "tipo_lugar"    : raw.get("place_type", ""),
-            "lugar_nombre"  : raw.get("place_name", ""),
-        }
-    }
-
-
 # Mapa de transformadores por plataforma
 TRANSFORMERS = {
-    "TikTok"       : transform_tiktok,
-    "Instagram"    : transform_instagram,
-    "TripAdvisor"  : transform_tripadvisor,
-    "Flickr"       : transform_flickr,
-    "Eventbrite"   : transform_eventbrite,
-    "YouTube"      : transform_youtube,
-    "GoogleReviews": transform_google_reviews,
+    "YouTube": transform_youtube,
 }
 
 
@@ -402,6 +139,16 @@ def detectar_lugar_nuevo(recurso: dict, nombres_existentes: set[str]) -> dict | 
 
 
 # ── Detección de edición ──────────────────────────────────
+
+def _anio(fecha_pub: str | None) -> int | None:
+    """Extrae el año de una fecha publicación."""
+    if not fecha_pub or len(fecha_pub) < 4:
+        return None
+    try:
+        return int(fecha_pub[:4])
+    except ValueError:
+        return None
+
 
 def detectar_edicion(recurso: dict, ediciones: list[dict], eventos: list[dict]) -> str | None:
     """
