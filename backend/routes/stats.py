@@ -132,3 +132,98 @@ def stats_eventos():
         resultado[0]["es_mas_popular"] = True
 
     return {"exito": True, "data": resultado}
+
+
+@router.get("/top-lugares")
+def top_lugares():
+    """
+    Los lugares con más recursos asociados.
+    """
+    col_recurso = get_col(COL_RECURSO)
+    col_lugar   = get_col(COL_LUGAR)
+
+    por_lugar = list(col_recurso.aggregate([
+        {"$match": {"lugar_id": {"$ne": None}}},
+        {"$group": {"_id": "$lugar_id", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 5}
+    ]))
+
+    resultado = []
+    for item in por_lugar:
+        lugar = col_lugar.find_one({"_id": item["_id"]}, {"nombre": 1, "tipo_lugar": 1})
+        if lugar:
+            resultado.append({
+                "nombre"    : lugar["nombre"],
+                "tipo_lugar": lugar.get("tipo_lugar", ""),
+                "count"     : item["count"],
+            })
+
+    return {"exito": True, "data": resultado}
+
+
+@router.get("/engagement")
+def engagement():
+    """
+    KPIs de alcance real (vistas/likes/comentarios) + el recurso más visto,
+    como tarjeta destacada. Solo tiene sentido para recursos con métricas
+    numéricas (por ahora, YouTube).
+    """
+    col = get_col(COL_RECURSO)
+
+    totales = list(col.aggregate([
+        {"$group": {
+            "_id": None,
+            "vistas":      {"$sum": "$metadata.metricas.plays"},
+            "likes":       {"$sum": "$metadata.metricas.likes"},
+            "comentarios": {"$sum": "$metadata.metricas.comentarios"},
+        }}
+    ]))
+    t = totales[0] if totales else {}
+
+    top = list(col.find(
+        {"metadata.metricas.plays": {"$gt": 0}},
+        {"metadata.texto_original": 1, "metadata.autor.name": 1,
+         "metadata.metricas": 1, "metadata.urls.video": 1}
+    ).sort("metadata.metricas.plays", -1).limit(1))
+
+    destacado = None
+    if top:
+        r = top[0]
+        meta = r.get("metadata", {})
+        destacado = {
+            "titulo":      (meta.get("texto_original") or "").split(".")[0][:120],
+            "canal":       meta.get("autor", {}).get("name", "—"),
+            "vistas":      meta.get("metricas", {}).get("plays", 0),
+            "comentarios": meta.get("metricas", {}).get("comentarios", 0),
+            "url":         meta.get("urls", {}).get("video", ""),
+        }
+
+    return {
+        "exito": True,
+        "total_vistas":      t.get("vistas", 0) or 0,
+        "total_likes":       t.get("likes", 0) or 0,
+        "total_comentarios": t.get("comentarios", 0) or 0,
+        "destacado": destacado,
+    }
+
+
+@router.get("/hashtags")
+def top_hashtags():
+    """
+    Palabras clave / hashtags más usados en los recursos.
+    """
+    col = get_col(COL_RECURSO)
+
+    resultado = list(col.aggregate([
+        {"$match": {"metadata.hashtags": {"$exists": True, "$ne": []}}},
+        {"$unwind": "$metadata.hashtags"},
+        {"$group": {"_id": {"$toLower": "$metadata.hashtags"}, "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10},
+    ]))
+
+    return {
+        "exito": True,
+        "data": [{"tag": r["_id"], "count": r["count"]} for r in resultado if r["_id"]],
+    }

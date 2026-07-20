@@ -8,7 +8,7 @@ const COLORES_PLAT = {
   TikTok:        '#9D174D',
   YouTube:       '#DC2626',
   Instagram:     '#7C3AED',
-  GoogleReviews: '#16A34A',
+  'Google Reviews': '#16A34A',
   TripAdvisor:   '#D97706',
   Flickr:        '#2563EB',
   Eventbrite:    '#EA580C',
@@ -18,14 +18,18 @@ const COLOR_DEFAULT = '#64748B';
 export async function render(container, { catEventos, catLugares }, token) {
   container.innerHTML = `<div class="empty"><p>Cargando estadísticas...</p></div>`;
 
-  let resumen = null, ingesta = null, statsEventos = null;
+  let resumen = null, ingesta = null, statsEventos = null, statsLugares = null;
+  let statsEngagement = null, statsHashtags = null;
   let totalRecursos = 0;
 
   try {
-    [resumen, ingesta, statsEventos] = await Promise.all([
+    [resumen, ingesta, statsEventos, statsLugares, statsEngagement, statsHashtags] = await Promise.all([
       apiFetch('/api/stats/resumen'),
       apiFetch('/api/stats/ingesta-mensual'),
       apiFetch('/api/stats/eventos'),
+      apiFetch('/api/stats/top-lugares'),
+      apiFetch('/api/stats/engagement'),
+      apiFetch('/api/stats/hashtags'),
     ]);
     totalRecursos = (resumen.por_plataforma || []).reduce((s, p) => s + p.count, 0);
   } catch {
@@ -78,6 +82,19 @@ export async function render(container, { catEventos, catLugares }, token) {
   const eventoTop       = eventosStats.find(e => e.es_mas_popular);
   const totalConEdicion = eventosStats.reduce((s, e) => s + e.recursos, 0);
   const maxEventoRec    = Math.max(...eventosStats.map(e => e.recursos), 1);
+
+  // ── Top lugares ────────────────────────────────────────────
+  const lugaresStats = statsLugares?.data || [];
+  const maxLugarRec   = Math.max(...lugaresStats.map(l => l.count), 1);
+
+  // ── Engagement + hashtags ────────────────────────────────────
+  const totalVistas      = statsEngagement?.total_vistas ?? 0;
+  const totalLikes       = statsEngagement?.total_likes ?? 0;
+  const totalComentarios = statsEngagement?.total_comentarios ?? 0;
+  const destacado        = statsEngagement?.destacado || null;
+
+  const hashtags   = statsHashtags?.data || [];
+  const maxHashtag = Math.max(...hashtags.map(h => h.count), 1);
 
   // El usuario ya navegó a otra vista mientras se cargaban los datos —
   // no pisar el contenido de la vista actual.
@@ -141,6 +158,65 @@ export async function render(container, { catEventos, catLugares }, token) {
         </div>`
       : `<div class="empty"><p>Sin datos de ingesta mensual aún.</p></div>`}
     </div>
+
+    <!-- Engagement -->
+    ${(totalVistas + totalLikes + totalComentarios) > 0 ? `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="sc-label">Vistas totales</div>
+        <div class="sc-val">${totalVistas.toLocaleString()}</div>
+        <div class="sc-sub">acumuladas en YouTube</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">Likes totales</div>
+        <div class="sc-val">${totalLikes.toLocaleString()}</div>
+        <div class="sc-sub">acumulados en YouTube</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">Comentarios totales</div>
+        <div class="sc-val">${totalComentarios.toLocaleString()}</div>
+        <div class="sc-sub">acumulados en YouTube</div>
+      </div>
+    </div>` : ''}
+
+    <!-- Video destacado + Hashtags -->
+    ${destacado || hashtags.length ? `
+    <div class="charts-grid">
+      ${destacado ? `
+      <div class="chart-card" style="background:linear-gradient(135deg,var(--navy) 0%,#1e5fa8 100%);color:#fff;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.7;margin-bottom:8px">
+          ▶️ Video más visto
+        </div>
+        <div style="font-size:15px;font-weight:800;line-height:1.3;margin-bottom:6px">
+          ${destacado.titulo || 'Sin título'}
+        </div>
+        <div style="font-size:12px;opacity:.8;margin-bottom:14px">${destacado.canal}</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:26px;font-weight:800;color:var(--gold)">${destacado.vistas.toLocaleString()}</div>
+            <div style="font-size:11px;opacity:.8">vistas</div>
+          </div>
+          <div>
+            <div style="font-size:26px;font-weight:800;color:var(--gold)">${destacado.comentarios.toLocaleString()}</div>
+            <div style="font-size:11px;opacity:.8">comentarios</div>
+          </div>
+        </div>
+        ${destacado.url ? `<a href="${destacado.url}" target="_blank" rel="noopener" style="margin-top:14px;font-size:11px;color:#fff;opacity:.85;text-decoration:underline">Ver video ↗</a>` : ''}
+      </div>` : ''}
+
+      ${hashtags.length ? `
+      <div class="chart-card">
+        <div class="chart-title">Palabras clave más usadas</div>
+        ${hashtags.map(h => `
+          <div class="bar-row">
+            <div class="bar-label">#${h.tag.replace(/^#/, '')}</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${Math.round((h.count / maxHashtag) * 100)}%;background:var(--gold)"></div>
+            </div>
+            <div class="bar-count">${h.count.toLocaleString()}</div>
+          </div>`).join('')}
+      </div>` : ''}
+    </div>` : ''}
 
     <!-- Eventos -->
     ${eventosStats.length ? `
@@ -206,5 +282,33 @@ export async function render(container, { catEventos, catLugares }, token) {
           </p>` : ''}
       </div>
     </div>` : ''}
+
+    <!-- Top lugares -->
+    <div class="card">
+      <div class="card-label">Lugares más mencionados</div>
+      ${lugaresStats.length
+        ? `<div class="chart-card" style="margin-top:8px">
+            ${lugaresStats.map((l, i) => `
+              <div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <div style="font-size:12px;font-weight:600;color:var(--text)">
+                    ${i === 0 ? '🏆 ' : ''}${l.nombre}
+                  </div>
+                  ${l.tipo_lugar
+                    ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap;margin-left:8px">${l.tipo_lugar}</div>`
+                    : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="bar-track" style="flex:1">
+                    <div class="bar-fill" style="width:${Math.round((l.count / maxLugarRec) * 100)}%;background:var(--navy)"></div>
+                  </div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy);min-width:70px;text-align:right">
+                    ${l.count.toLocaleString()} recurso${l.count !== 1 ? 's' : ''}
+                  </div>
+                </div>
+              </div>`).join('')}
+          </div>`
+        : `<div class="empty"><p>Todavía no hay recursos con un lugar asignado. Los lugares se asocian durante la clasificación en la ingesta ETL.</p></div>`}
+    </div>
   `;
 }
