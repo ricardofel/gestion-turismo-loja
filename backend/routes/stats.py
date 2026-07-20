@@ -3,6 +3,7 @@ routes/stats.py — Endpoints de estadísticas reales para el dashboard Home.
 """
 from fastapi import APIRouter
 from bson import ObjectId
+import re
 from ..database import get_col, COL_RECURSO, COL_EVENTO, COL_EDICION, COL_LUGAR
 
 router = APIRouter(prefix="/api/stats", tags=["Estadísticas"])
@@ -226,4 +227,49 @@ def top_hashtags():
     return {
         "exito": True,
         "data": [{"tag": r["_id"], "count": r["count"]} for r in resultado if r["_id"]],
+    }
+
+
+# Palabras muy comunes en español que no aportan significado para este análisis.
+_STOP_WORDS_ES = {
+    "de", "la", "que", "el", "en", "y", "a", "los", "del", "se", "las",
+    "por", "un", "para", "con", "no", "una", "su", "al", "lo", "como",
+    "más", "pero", "sus", "le", "ya", "o", "este", "sí", "porque", "esta",
+    "entre", "cuando", "muy", "sin", "sobre", "también", "me", "hasta",
+    "hay", "donde", "quien", "desde", "todo", "nos", "durante", "todos",
+    "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante", "ellos",
+    "e", "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro",
+    "otras", "otra", "él", "tanto", "esa", "estos", "mucho", "quienes",
+    "nada", "muchos", "cual", "poco", "ella", "estar", "estas", "algunas",
+    "algo", "nosotros", "es", "son", "fue", "ser", "loja", "ecuador",
+}
+
+
+@router.get("/palabras-frecuentes")
+def palabras_frecuentes():
+    """
+    La(s) palabra(s) más repetidas en el texto de los recursos
+    (título/descripción), sin contar palabras de relleno.
+    Distinto de /hashtags: aquí se analiza el texto libre, no las etiquetas.
+    """
+    col = get_col(COL_RECURSO)
+
+    textos = col.find(
+        {"metadata.texto_original": {"$exists": True, "$ne": ""}},
+        {"metadata.texto_original": 1}
+    )
+
+    conteo = {}
+    for r in textos:
+        texto = (r.get("metadata", {}).get("texto_original") or "").lower()
+        for palabra in re.findall(r"[a-záéíóúñü]+", texto):
+            if len(palabra) <= 3 or palabra in _STOP_WORDS_ES:
+                continue
+            conteo[palabra] = conteo.get(palabra, 0) + 1
+
+    top = sorted(conteo.items(), key=lambda x: x[1], reverse=True)[:10]
+
+    return {
+        "exito": True,
+        "data": [{"palabra": p, "count": c} for p, c in top],
     }

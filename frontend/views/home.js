@@ -15,21 +15,60 @@ const COLORES_PLAT = {
 };
 const COLOR_DEFAULT = '#64748B';
 
+function seccion(titulo) {
+  return `<div style="font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.6px;margin:32px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">${titulo}</div>`;
+}
+
+function donutChart(segmentos, size = 130, grosor = 20) {
+  const total = segmentos.reduce((s, x) => s + x.count, 0) || 1;
+  const r = (size - grosor) / 2;
+  const c = 2 * Math.PI * r;
+  let acumulado = 0;
+
+  const circulos = segmentos.map(seg => {
+    const frac = seg.count / total;
+    const dash = frac * c;
+    const el = `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none"
+      stroke="${seg.color}" stroke-width="${grosor}"
+      stroke-dasharray="${dash} ${c - dash}" stroke-dashoffset="${-acumulado}"
+      transform="rotate(-90 ${size / 2} ${size / 2})" />`;
+    acumulado += dash;
+    return el;
+  }).join('');
+
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${circulos}</svg>`;
+}
+
+function nubeDePalabras(items) {
+  const counts = items.map(i => i.count);
+  const max = Math.max(...counts, 1);
+  const min = Math.min(...counts, 1);
+  return `<div style="display:flex;flex-wrap:wrap;gap:10px 14px;align-items:baseline">
+    ${items.map(i => {
+      const escala = max === min ? 1 : (i.count - min) / (max - min);
+      const tamano = Math.round(13 + escala * 15);
+      const opacidad = (0.55 + escala * 0.45).toFixed(2);
+      return `<span style="font-size:${tamano}px;font-weight:700;color:var(--navy);opacity:${opacidad}" title="${i.count} veces">#${i.tag}</span>`;
+    }).join('')}
+  </div>`;
+}
+
 export async function render(container, { catEventos, catLugares }, token) {
   container.innerHTML = `<div class="empty"><p>Cargando estadísticas...</p></div>`;
 
   let resumen = null, ingesta = null, statsEventos = null, statsLugares = null;
-  let statsEngagement = null, statsHashtags = null;
+  let statsEngagement = null, statsHashtags = null, statsPalabras = null;
   let totalRecursos = 0;
 
   try {
-    [resumen, ingesta, statsEventos, statsLugares, statsEngagement, statsHashtags] = await Promise.all([
+    [resumen, ingesta, statsEventos, statsLugares, statsEngagement, statsHashtags, statsPalabras] = await Promise.all([
       apiFetch('/api/stats/resumen'),
       apiFetch('/api/stats/ingesta-mensual'),
       apiFetch('/api/stats/eventos'),
       apiFetch('/api/stats/top-lugares'),
       apiFetch('/api/stats/engagement'),
       apiFetch('/api/stats/hashtags'),
+      apiFetch('/api/stats/palabras-frecuentes'),
     ]);
     totalRecursos = (resumen.por_plataforma || []).reduce((s, p) => s + p.count, 0);
   } catch {
@@ -50,15 +89,14 @@ export async function render(container, { catEventos, catLugares }, token) {
     { label: 'Lugares registrados', val: catLugares.length || '—', sub: 'en la colección lugar' },
   ];
 
-  // ── Plataformas ────────────────────────────────────────────
+  // ── Plataformas (donut) ─────────────────────────────────────
   const platData = resumen?.por_plataforma || [];
-  const maxPlat  = Math.max(...platData.map(p => p.count), 1);
-  const porPlat  = platData.map(p => ({
+  const platSegmentos = platData.map(p => ({
     label: p.plataforma,
     count: p.count,
-    pct:   Math.round((p.count / maxPlat) * 100),
     color: COLORES_PLAT[p.plataforma] || COLOR_DEFAULT,
   }));
+  const totalPlat = platSegmentos.reduce((s, p) => s + p.count, 0) || 1;
 
   // ── Estados ────────────────────────────────────────────────
   const ESTADOS_ORDEN  = ['Crudo', 'Clasificado', 'Error'];
@@ -87,14 +125,16 @@ export async function render(container, { catEventos, catLugares }, token) {
   const lugaresStats = statsLugares?.data || [];
   const maxLugarRec   = Math.max(...lugaresStats.map(l => l.count), 1);
 
-  // ── Engagement + hashtags ────────────────────────────────────
+  // ── Engagement ───────────────────────────────────────────────
   const totalVistas      = statsEngagement?.total_vistas ?? 0;
   const totalLikes       = statsEngagement?.total_likes ?? 0;
   const totalComentarios = statsEngagement?.total_comentarios ?? 0;
   const destacado        = statsEngagement?.destacado || null;
 
-  const hashtags   = statsHashtags?.data || [];
-  const maxHashtag = Math.max(...hashtags.map(h => h.count), 1);
+  // ── Palabras clave ───────────────────────────────────────────
+  const hashtags  = statsHashtags?.data || [];
+  const palabras  = statsPalabras?.data || [];
+  const palabraTop = palabras[0] || null;
 
   // El usuario ya navegó a otra vista mientras se cargaban los datos —
   // no pisar el contenido de la vista actual.
@@ -111,19 +151,22 @@ export async function render(container, { catEventos, catLugares }, token) {
         </div>`).join('')}
     </div>
 
-    <!-- Plataformas + Estados -->
+    ${seccion('Distribución de contenido')}
     <div class="charts-grid">
       <div class="chart-card">
         <div class="chart-title">Por plataforma</div>
-        ${porPlat.length
-          ? porPlat.map(p => `
-            <div class="bar-row">
-              <div class="bar-label">${p.label}</div>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:${p.pct}%;background:${p.color}"></div>
-              </div>
-              <div class="bar-count">${p.count.toLocaleString()}</div>
-            </div>`).join('')
+        ${platSegmentos.length ? `
+          <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+            ${donutChart(platSegmentos)}
+            <div style="flex:1;min-width:140px">
+              ${platSegmentos.map(p => `
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <span style="width:10px;height:10px;border-radius:50%;background:${p.color};flex-shrink:0"></span>
+                  <span style="font-size:12px;color:var(--text);flex:1">${p.label}</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy)">${Math.round((p.count / totalPlat) * 100)}%</span>
+                </div>`).join('')}
+            </div>
+          </div>`
           : `<div class="empty"><p>Sin datos de plataformas.</p></div>`}
       </div>
       <div class="chart-card">
@@ -139,7 +182,7 @@ export async function render(container, { catEventos, catLugares }, token) {
       </div>
     </div>
 
-    <!-- Ingesta mensual -->
+    ${seccion('Evolución en el tiempo')}
     <div class="card">
       <div class="card-label">Ingesta mensual por fecha de publicación</div>
       ${mesesData.length ? `
@@ -159,74 +202,87 @@ export async function render(container, { catEventos, catLugares }, token) {
       : `<div class="empty"><p>Sin datos de ingesta mensual aún.</p></div>`}
     </div>
 
-    <!-- Engagement -->
+    ${(totalVistas + totalLikes + totalComentarios) > 0 || destacado ? `
+    ${seccion('Alcance en YouTube')}
     ${(totalVistas + totalLikes + totalComentarios) > 0 ? `
     <div class="stats-grid">
       <div class="stat-card">
         <div class="sc-label">Vistas totales</div>
         <div class="sc-val">${totalVistas.toLocaleString()}</div>
-        <div class="sc-sub">acumuladas en YouTube</div>
+        <div class="sc-sub">acumuladas</div>
       </div>
       <div class="stat-card">
         <div class="sc-label">Likes totales</div>
         <div class="sc-val">${totalLikes.toLocaleString()}</div>
-        <div class="sc-sub">acumulados en YouTube</div>
+        <div class="sc-sub">acumulados</div>
       </div>
       <div class="stat-card">
         <div class="sc-label">Comentarios totales</div>
         <div class="sc-val">${totalComentarios.toLocaleString()}</div>
-        <div class="sc-sub">acumulados en YouTube</div>
+        <div class="sc-sub">acumulados</div>
       </div>
     </div>` : ''}
 
-    <!-- Video destacado + Hashtags -->
-    ${destacado || hashtags.length ? `
-    <div class="charts-grid">
-      ${destacado ? `
-      <div class="chart-card" style="background:linear-gradient(135deg,var(--navy) 0%,#1e5fa8 100%);color:#fff;display:flex;flex-direction:column;justify-content:center">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.7;margin-bottom:8px">
-          ▶️ Video más visto
+    ${destacado ? `
+    <div class="card">
+      <div class="card-label">Video con más vistas</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:6px">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${destacado.titulo || 'Sin título'}</div>
+          <div style="font-size:12px;color:var(--muted)">${destacado.canal}</div>
+          ${destacado.url ? `<a href="${destacado.url}" target="_blank" rel="noopener" style="font-size:12px;color:var(--navy)">Ver video ↗</a>` : ''}
         </div>
-        <div style="font-size:15px;font-weight:800;line-height:1.3;margin-bottom:6px">
-          ${destacado.titulo || 'Sin título'}
-        </div>
-        <div style="font-size:12px;opacity:.8;margin-bottom:14px">${destacado.canal}</div>
-        <div style="display:flex;gap:20px;flex-wrap:wrap">
-          <div>
-            <div style="font-size:26px;font-weight:800;color:var(--gold)">${destacado.vistas.toLocaleString()}</div>
-            <div style="font-size:11px;opacity:.8">vistas</div>
+        <div style="display:flex;gap:24px">
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;color:var(--navy)">${destacado.vistas.toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--muted)">vistas</div>
           </div>
-          <div>
-            <div style="font-size:26px;font-weight:800;color:var(--gold)">${destacado.comentarios.toLocaleString()}</div>
-            <div style="font-size:11px;opacity:.8">comentarios</div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;color:var(--navy)">${destacado.comentarios.toLocaleString()}</div>
+            <div style="font-size:11px;color:var(--muted)">comentarios</div>
           </div>
         </div>
-        ${destacado.url ? `<a href="${destacado.url}" target="_blank" rel="noopener" style="margin-top:14px;font-size:11px;color:#fff;opacity:.85;text-decoration:underline">Ver video ↗</a>` : ''}
-      </div>` : ''}
+      </div>
+    </div>` : ''}` : ''}
 
+    ${hashtags.length || palabraTop ? `
+    ${seccion('Palabras más usadas')}
+    <div class="charts-grid">
       ${hashtags.length ? `
       <div class="chart-card">
-        <div class="chart-title">Palabras clave más usadas</div>
-        ${hashtags.map(h => `
-          <div class="bar-row">
-            <div class="bar-label">#${h.tag.replace(/^#/, '')}</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:${Math.round((h.count / maxHashtag) * 100)}%;background:var(--gold)"></div>
-            </div>
-            <div class="bar-count">${h.count.toLocaleString()}</div>
-          </div>`).join('')}
+        <div class="chart-title">Hashtags más usados</div>
+        ${nubeDePalabras(hashtags)}
+      </div>` : ''}
+
+      ${palabraTop ? `
+      <div class="chart-card">
+        <div class="chart-title">Palabra más repetida en las descripciones</div>
+        <div style="text-align:center;padding:8px 0 4px">
+          <div style="font-size:26px;font-weight:800;color:var(--navy)">"${palabraTop.palabra}"</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">apareció ${palabraTop.count} veces</div>
+        </div>
+        ${palabras.length > 1 ? `
+        <div style="margin-top:14px">
+          ${palabras.slice(1, 6).map(p => `
+            <div class="bar-row">
+              <div class="bar-label">${p.palabra}</div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:${Math.round((p.count / palabraTop.count) * 100)}%;background:var(--gold)"></div>
+              </div>
+              <div class="bar-count">${p.count}</div>
+            </div>`).join('')}
+        </div>` : ''}
       </div>` : ''}
     </div>` : ''}
 
-    <!-- Eventos -->
     ${eventosStats.length ? `
+    ${seccion('Eventos')}
     <div class="charts-grid" style="grid-template-columns:${eventoTop && eventoTop.recursos > 0 ? '1fr 2fr' : '1fr'}">
 
       ${eventoTop && eventoTop.recursos > 0 ? `
-      <!-- KPI popular -->
       <div class="chart-card" style="background:linear-gradient(135deg,var(--navy) 0%,#1e5fa8 100%);color:#fff;display:flex;flex-direction:column;justify-content:center">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.7;margin-bottom:8px">
-          🏆 Evento más popular
+          Evento más popular
         </div>
         <div style="font-size:17px;font-weight:800;line-height:1.3;margin-bottom:14px">
           ${eventoTop.nombre}
@@ -247,7 +303,6 @@ export async function render(container, { catEventos, catLugares }, token) {
         </div>` : ''}
       </div>` : ''}
 
-      <!-- Tabla eventos -->
       <div class="chart-card">
         <div class="chart-title">Recursos por evento</div>
         ${eventosStats.map(ev => `
@@ -255,7 +310,7 @@ export async function render(container, { catEventos, catLugares }, token) {
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
               <div style="font-size:12px;font-weight:600;color:var(--text)">
                 ${ev.nombre}
-                ${ev.es_mas_popular ? `<span style="font-size:10px;color:var(--gold);margin-left:5px">★ Popular</span>` : ''}
+                ${ev.es_mas_popular ? `<span style="font-size:10px;color:var(--gold);margin-left:5px">Popular</span>` : ''}
               </div>
               <div style="font-size:11px;color:var(--muted);white-space:nowrap;margin-left:8px">
                 ${ev.ediciones} edicion${ev.ediciones !== 1 ? 'es' : ''}
@@ -283,17 +338,14 @@ export async function render(container, { catEventos, catLugares }, token) {
       </div>
     </div>` : ''}
 
-    <!-- Top lugares -->
+    ${seccion('Lugares con más contenido')}
     <div class="card">
-      <div class="card-label">Lugares más mencionados</div>
       ${lugaresStats.length
         ? `<div class="chart-card" style="margin-top:8px">
-            ${lugaresStats.map((l, i) => `
+            ${lugaresStats.map(l => `
               <div style="margin-bottom:14px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                  <div style="font-size:12px;font-weight:600;color:var(--text)">
-                    ${i === 0 ? '🏆 ' : ''}${l.nombre}
-                  </div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text)">${l.nombre}</div>
                   ${l.tipo_lugar
                     ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap;margin-left:8px">${l.tipo_lugar}</div>`
                     : ''}
