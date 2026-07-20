@@ -148,28 +148,38 @@ def stats_eventos():
 
 
 @router.get("/top-lugares")
-def top_lugares():
+def top_lugares(limite: int = 5):
     """
-    Los lugares con más recursos asociados.
+    Los lugares con más recursos asociados. `limite` controla cuántos se
+    devuelven (el frontend pide más de 5 cuando el usuario busca o para
+    dibujar el mapa de puntos).
     """
     col_recurso = get_col(COL_RECURSO)
     col_lugar   = get_col(COL_LUGAR)
+    limite = max(1, min(limite, 100))
 
     por_lugar = list(col_recurso.aggregate([
         {"$match": {"lugar_id": {"$ne": None}}},
         {"$group": {"_id": "$lugar_id", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
-        {"$limit": 5}
+        {"$limit": limite}
     ]))
 
     resultado = []
     for item in por_lugar:
-        lugar = col_lugar.find_one({"_id": item["_id"]}, {"nombre": 1, "tipo_lugar": 1})
+        lugar = col_lugar.find_one(
+            {"_id": item["_id"]},
+            {"nombre": 1, "tipo_lugar": 1, "coordenadas_geo": 1}
+        )
         if lugar:
+            coords = lugar.get("coordenadas_geo") or {}
+            lonlat = coords.get("coordinates") if coords.get("type") == "Point" else None
             resultado.append({
                 "nombre"    : lugar["nombre"],
                 "tipo_lugar": lugar.get("tipo_lugar", ""),
                 "count"     : item["count"],
+                "lon"       : lonlat[0] if lonlat else None,
+                "lat"       : lonlat[1] if lonlat else None,
             })
 
     return {"exito": True, "data": resultado}

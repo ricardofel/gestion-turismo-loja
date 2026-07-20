@@ -74,6 +74,83 @@ function renderTimelineHTML(mesesData) {
     </div>`;
 }
 
+function comparacionMensualHTML(mesesData) {
+  if (mesesData.length < 2) return '';
+  const actual   = mesesData[mesesData.length - 1];
+  const anterior = mesesData[mesesData.length - 2];
+  if (!anterior.count) return '';
+
+  const variacion = Math.round(((actual.count - anterior.count) / anterior.count) * 100);
+  const subio = variacion >= 0;
+  const color = subio ? 'var(--green)' : 'var(--red)';
+  const signo = subio ? '+' : '';
+
+  return `<span style="font-size:12px;font-weight:700;color:${color};background:${subio ? '#DCFCE7' : '#FEE2E2'};padding:3px 9px;border-radius:12px">
+    ${signo}${variacion}% vs ${anterior.label}
+  </span>`;
+}
+
+function renderLugarItemHTML(l, maxCount) {
+  return `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${l.nombre}</div>
+        ${l.tipo_lugar
+          ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap;margin-left:8px">${l.tipo_lugar}</div>`
+          : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="bar-track" style="flex:1">
+          <div class="bar-fill" style="width:${Math.round((l.count / maxCount) * 100)}%;background:var(--navy)"></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--navy);min-width:70px;text-align:right">
+          ${l.count.toLocaleString()} recurso${l.count !== 1 ? 's' : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderLugaresListaHTML(lista, maxCount) {
+  if (!lista.length) {
+    return `<div class="empty"><p>Sin resultados para esa búsqueda.</p></div>`;
+  }
+  return lista.map(l => renderLugarItemHTML(l, maxCount)).join('');
+}
+
+function mapaDePuntos(lugares, size = { w: 320, h: 260 }, margin = 26) {
+  const conCoord = lugares.filter(l => l.lat != null && l.lon != null);
+  if (!conCoord.length) return null;
+
+  const lats = conCoord.map(l => l.lat);
+  const lons = conCoord.map(l => l.lon);
+  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+  const minLon = Math.min(...lons), maxLon = Math.max(...lons);
+  const rangoLat = (maxLat - minLat) || 0.01;
+  const rangoLon = (maxLon - minLon) || 0.01;
+  const maxCount = Math.max(...conCoord.map(l => l.count), 1);
+
+  const puntos = conCoord.map((l, i) => ({
+    idx: i,
+    nombre: l.nombre,
+    tipo: l.tipo_lugar,
+    count: l.count,
+    x: margin + ((l.lon - minLon) / rangoLon) * (size.w - 2 * margin),
+    y: margin + (1 - (l.lat - minLat) / rangoLat) * (size.h - 2 * margin),
+    radio: 5 + (l.count / maxCount) * 13,
+  }));
+
+  const circulos = puntos.map(p => `
+    <circle class="mapa-punto" data-idx="${p.idx}"
+      cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.radio.toFixed(1)}"
+      fill="var(--navy)" fill-opacity="0.5" stroke="var(--navy)" stroke-width="1.5"
+      style="cursor:pointer" />`).join('');
+
+  return {
+    puntos,
+    svg: `<svg width="${size.w}" height="${size.h}" viewBox="0 0 ${size.w} ${size.h}" style="max-width:100%;height:auto">${circulos}</svg>`,
+  };
+}
+
 export async function render(container, { catEventos, catLugares }, token) {
   container.innerHTML = `<div class="empty"><p>Cargando estadísticas...</p></div>`;
 
@@ -86,7 +163,7 @@ export async function render(container, { catEventos, catLugares }, token) {
       apiFetch('/api/stats/resumen'),
       apiFetch('/api/stats/ingesta-mensual'),
       apiFetch('/api/stats/eventos'),
-      apiFetch('/api/stats/top-lugares'),
+      apiFetch('/api/stats/top-lugares?limite=30'),
       apiFetch('/api/stats/engagement'),
       apiFetch('/api/stats/hashtags'),
       apiFetch('/api/stats/palabras-frecuentes'),
@@ -134,6 +211,7 @@ export async function render(container, { catEventos, catLugares }, token) {
 
   // ── Ingesta mensual ────────────────────────────────────────
   const mesesData = ingesta?.data || [];
+  const comparacionHTML = comparacionMensualHTML(mesesData);
 
   // ── Eventos ────────────────────────────────────────────────
   const eventosStats    = statsEventos?.data || [];
@@ -144,6 +222,7 @@ export async function render(container, { catEventos, catLugares }, token) {
   // ── Top lugares ────────────────────────────────────────────
   const lugaresStats = statsLugares?.data || [];
   const maxLugarRec   = Math.max(...lugaresStats.map(l => l.count), 1);
+  const mapa = mapaDePuntos(lugaresStats);
 
   // ── Engagement ───────────────────────────────────────────────
   const totalVistas      = statsEngagement?.total_vistas ?? 0;
@@ -205,7 +284,10 @@ export async function render(container, { catEventos, catLugares }, token) {
     ${seccion('Evolución en el tiempo')}
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
-        <div class="card-label" style="margin-bottom:0">Ingesta mensual por fecha de publicación</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="card-label" style="margin-bottom:0">Ingesta mensual por fecha de publicación</div>
+          ${comparacionHTML}
+        </div>
         ${mesesData.length ? `
         <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)">
           <label>Desde <input type="month" id="ingesta-desde" value="${mesesData[0].periodo}"
@@ -358,28 +440,30 @@ export async function render(container, { catEventos, catLugares }, token) {
     </div>` : ''}
 
     ${seccion('Lugares con más contenido')}
-    <div class="card">
-      ${lugaresStats.length
-        ? `<div class="chart-card" style="margin-top:8px">
-            ${lugaresStats.map(l => `
-              <div style="margin-bottom:14px">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                  <div style="font-size:12px;font-weight:600;color:var(--text)">${l.nombre}</div>
-                  ${l.tipo_lugar
-                    ? `<div style="font-size:10px;color:var(--muted);white-space:nowrap;margin-left:8px">${l.tipo_lugar}</div>`
-                    : ''}
-                </div>
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div class="bar-track" style="flex:1">
-                    <div class="bar-fill" style="width:${Math.round((l.count / maxLugarRec) * 100)}%;background:var(--navy)"></div>
-                  </div>
-                  <div style="font-size:12px;font-weight:700;color:var(--navy);min-width:70px;text-align:right">
-                    ${l.count.toLocaleString()} recurso${l.count !== 1 ? 's' : ''}
-                  </div>
-                </div>
-              </div>`).join('')}
-          </div>`
-        : `<div class="empty"><p>Todavía no hay recursos con un lugar asignado. Los lugares se asocian durante la clasificación en la ingesta ETL.</p></div>`}
+    <div class="charts-grid" style="grid-template-columns:${mapa ? '1fr 1fr' : '1fr'}">
+      <div class="chart-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+          <div class="chart-title" style="margin-bottom:0">Top lugares</div>
+          ${lugaresStats.length ? `
+          <input type="text" id="lugares-buscador" placeholder="Buscar por nombre o tipo..."
+            style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:180px">
+          ` : ''}
+        </div>
+        <div id="lugares-lista">
+          ${lugaresStats.length
+            ? renderLugaresListaHTML(lugaresStats.slice(0, 5), maxLugarRec)
+            : `<div class="empty"><p>Todavía no hay recursos con un lugar asignado. Los lugares se asocian durante la clasificación en la ingesta ETL.</p></div>`}
+        </div>
+      </div>
+
+      ${mapa ? `
+      <div class="chart-card">
+        <div class="chart-title">Mapa de lugares (por cantidad de recursos)</div>
+        <div style="display:flex;justify-content:center">${mapa.svg}</div>
+        <div id="mapa-caption" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">
+          Haz clic en un punto para ver el detalle
+        </div>
+      </div>` : ''}
     </div>
   `;
 
@@ -423,6 +507,34 @@ export async function render(container, { catEventos, catLugares }, token) {
       if (inputDesde) inputDesde.value = rangoOriginal.desde;
       if (inputHasta) inputHasta.value = rangoOriginal.hasta;
       chartBody.innerHTML = renderTimelineHTML(mesesData);
+    });
+  }
+
+  // ── Buscador de lugares ──────────────────────────────────────
+  const buscadorLugares = container.querySelector('#lugares-buscador');
+  const listaLugaresEl  = container.querySelector('#lugares-lista');
+  if (buscadorLugares && listaLugaresEl) {
+    buscadorLugares.addEventListener('input', () => {
+      const q = buscadorLugares.value.trim().toLowerCase();
+      const filtrados = !q
+        ? lugaresStats.slice(0, 5)
+        : lugaresStats.filter(l =>
+            l.nombre.toLowerCase().includes(q) ||
+            (l.tipo_lugar || '').toLowerCase().includes(q)
+          );
+      listaLugaresEl.innerHTML = renderLugaresListaHTML(filtrados, maxLugarRec);
+    });
+  }
+
+  // ── Mapa de puntos: clic para ver detalle ───────────────────
+  if (mapa) {
+    const caption = container.querySelector('#mapa-caption');
+    container.querySelectorAll('.mapa-punto').forEach(circulo => {
+      circulo.addEventListener('click', () => {
+        const p = mapa.puntos[Number(circulo.dataset.idx)];
+        if (!p || !caption) return;
+        caption.innerHTML = `<strong style="color:var(--navy)">${p.nombre}</strong>${p.tipo ? ` · ${p.tipo}` : ''} — ${p.count} recurso${p.count !== 1 ? 's' : ''}`;
+      });
     });
   }
 }
