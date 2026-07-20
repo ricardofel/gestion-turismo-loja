@@ -47,15 +47,24 @@ def resumen_general():
 
 
 @router.get("/ingesta-mensual")
-def ingesta_mensual():
+def ingesta_mensual(desde: str | None = None, hasta: str | None = None):
     """
     Agrupa recursos por mes según fecha_publicacion (YYYY-MM-DD).
-    Devuelve todos los meses con datos.
+    Devuelve todos los meses con datos, o solo el rango [desde, hasta]
+    si se pasan como query params en formato "YYYY-MM"
+    (ej: /api/stats/ingesta-mensual?desde=2026-02&hasta=2026-06).
     """
     col = get_col(COL_RECURSO)
 
-    resultado = list(col.aggregate([
-        {"$match": {"fecha_publicacion": {"$ne": None, "$type": "string", "$regex": r"^\d{4}-\d{2}"}}},
+    match_stage = {"fecha_publicacion": {"$ne": None, "$type": "string", "$regex": r"^\d{4}-\d{2}"}}
+    if desde and re.match(r"^\d{4}-\d{2}$", desde):
+        match_stage.setdefault("fecha_publicacion", {})
+        match_stage["fecha_publicacion"] = {**match_stage["fecha_publicacion"], "$gte": f"{desde}-01"}
+    if hasta and re.match(r"^\d{4}-\d{2}$", hasta):
+        match_stage["fecha_publicacion"] = {**match_stage["fecha_publicacion"], "$lte": f"{hasta}-31"}
+
+    pipeline = [
+        {"$match": match_stage},
         {"$project": {
             "anio": {"$substr": ["$fecha_publicacion", 0, 4]},
             "mes":  {"$substr": ["$fecha_publicacion", 5, 2]},
@@ -65,8 +74,11 @@ def ingesta_mensual():
             "count": {"$sum": 1}
         }},
         {"$sort": {"_id.anio": 1, "_id.mes": 1}},
-        {"$limit": 24}
-    ]))
+    ]
+    if not desde and not hasta:
+        pipeline.append({"$limit": 24})  # sin filtro, se mantiene el tope original
+
+    resultado = list(col.aggregate(pipeline))
 
     MESES_ES = {
         "01": "Ene", "02": "Feb", "03": "Mar", "04": "Abr",

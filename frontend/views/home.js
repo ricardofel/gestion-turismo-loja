@@ -53,6 +53,27 @@ function nubeDePalabras(items) {
   </div>`;
 }
 
+function renderTimelineHTML(mesesData) {
+  if (!mesesData.length) {
+    return `<div class="empty"><p>Sin datos de ingesta para el rango seleccionado.</p></div>`;
+  }
+  const maxMes = Math.max(...mesesData.map(m => m.count), 1);
+  return `
+    <div class="timeline-bars">
+      ${mesesData.map(m => `
+        <div class="tbar"
+             style="height:${Math.round((m.count / maxMes) * 100)}%"
+             title="${m.label}: ${m.count}">
+        </div>`).join('')}
+    </div>
+    <div class="tmonths">
+      ${mesesData.map(m => {
+        const [mes, anio] = m.label.split(' ');
+        return `<div class="tmonth">${mes}<br><span style="font-size:9px;opacity:.6">${anio || ''}</span></div>`;
+      }).join('')}
+    </div>`;
+}
+
 export async function render(container, { catEventos, catLugares }, token) {
   container.innerHTML = `<div class="empty"><p>Cargando estadísticas...</p></div>`;
 
@@ -113,7 +134,6 @@ export async function render(container, { catEventos, catLugares }, token) {
 
   // ── Ingesta mensual ────────────────────────────────────────
   const mesesData = ingesta?.data || [];
-  const maxMes    = Math.max(...mesesData.map(m => m.count), 1);
 
   // ── Eventos ────────────────────────────────────────────────
   const eventosStats    = statsEventos?.data || [];
@@ -184,22 +204,21 @@ export async function render(container, { catEventos, catLugares }, token) {
 
     ${seccion('Evolución en el tiempo')}
     <div class="card">
-      <div class="card-label">Ingesta mensual por fecha de publicación</div>
-      ${mesesData.length ? `
-        <div class="timeline-bars">
-          ${mesesData.map(m => `
-            <div class="tbar"
-                 style="height:${Math.round((m.count / maxMes) * 100)}%"
-                 title="${m.label}: ${m.count}">
-            </div>`).join('')}
-        </div>
-        <div class="tmonths">
-          ${mesesData.map(m => {
-            const [mes, anio] = m.label.split(' ');
-            return `<div class="tmonth">${mes}<br><span style="font-size:9px;opacity:.6">${anio || ''}</span></div>`;
-          }).join('')}
-        </div>`
-      : `<div class="empty"><p>Sin datos de ingesta mensual aún.</p></div>`}
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <div class="card-label" style="margin-bottom:0">Ingesta mensual por fecha de publicación</div>
+        ${mesesData.length ? `
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)">
+          <label>Desde <input type="month" id="ingesta-desde" value="${mesesData[0].periodo}"
+            style="margin-left:4px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px"></label>
+          <label>Hasta <input type="month" id="ingesta-hasta" value="${mesesData[mesesData.length - 1].periodo}"
+            style="margin-left:4px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px"></label>
+          <button id="ingesta-reset" type="button"
+            style="border:1px solid var(--border);background:var(--white);border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--navy)">
+            Ver todo
+          </button>
+        </div>` : ''}
+      </div>
+      <div id="ingesta-chart-body">${renderTimelineHTML(mesesData)}</div>
     </div>
 
     ${(totalVistas + totalLikes + totalComentarios) > 0 || destacado ? `
@@ -363,4 +382,47 @@ export async function render(container, { catEventos, catLugares }, token) {
         : `<div class="empty"><p>Todavía no hay recursos con un lugar asignado. Los lugares se asocian durante la clasificación en la ingesta ETL.</p></div>`}
     </div>
   `;
+
+  // ── Filtro interactivo de ingesta mensual ───────────────────
+  const inputDesde = container.querySelector('#ingesta-desde');
+  const inputHasta = container.querySelector('#ingesta-hasta');
+  const btnReset   = container.querySelector('#ingesta-reset');
+  const chartBody  = container.querySelector('#ingesta-chart-body');
+
+  const rangoOriginal = {
+    desde: mesesData[0]?.periodo,
+    hasta: mesesData[mesesData.length - 1]?.periodo,
+  };
+
+  async function actualizarIngesta() {
+    if (!inputDesde || !inputHasta || !chartBody) return;
+    const desde = inputDesde.value;
+    const hasta = inputHasta.value;
+    if (!desde || !hasta) return;
+
+    if (desde > hasta) {
+      chartBody.innerHTML = `<div class="empty"><p>La fecha "Desde" no puede ser posterior a "Hasta".</p></div>`;
+      return;
+    }
+
+    chartBody.innerHTML = `<div class="empty"><p>Cargando...</p></div>`;
+    try {
+      const resp = await apiFetch(`/api/stats/ingesta-mensual?desde=${desde}&hasta=${hasta}`);
+      chartBody.innerHTML = renderTimelineHTML(resp?.data || []);
+    } catch {
+      chartBody.innerHTML = `<div class="empty"><p>No se pudo cargar el rango seleccionado.</p></div>`;
+    }
+  }
+
+  if (inputDesde && inputHasta) {
+    inputDesde.addEventListener('change', actualizarIngesta);
+    inputHasta.addEventListener('change', actualizarIngesta);
+  }
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      if (inputDesde) inputDesde.value = rangoOriginal.desde;
+      if (inputHasta) inputHasta.value = rangoOriginal.hasta;
+      chartBody.innerHTML = renderTimelineHTML(mesesData);
+    });
+  }
 }
