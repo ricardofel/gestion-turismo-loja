@@ -96,6 +96,7 @@ def transform_google_reviews(raw: dict) -> dict:
             "texto_original"  : raw.get("texto", ""),
             "hashtags"        : [],
             "urls"            : {"review": raw.get("link", "")},
+            "imagenes"        : raw.get("imagenes", []),
             "idioma"          : "es",
             "es_anuncio"      : False,
             "es_patrocinado"  : False,

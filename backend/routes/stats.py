@@ -2,9 +2,10 @@
 routes/stats.py — Endpoints de estadísticas reales para el dashboard Home.
 """
 from fastapi import APIRouter
+from pydantic import BaseModel
 from bson import ObjectId
 import re
-from ..database import get_col, COL_RECURSO, COL_EVENTO, COL_EDICION, COL_LUGAR
+from ..database import get_col, COL_RECURSO, COL_EVENTO, COL_EDICION, COL_LUGAR, COL_IMAGEN_OCULTA, ahora_utc
 
 router = APIRouter(prefix="/api/stats", tags=["Estadísticas"])
 
@@ -377,6 +378,7 @@ def reviews_por_lugar(limite: int = 10):
 def reviews_recientes(
     lugar_id: str | None = None,
     limite: int = 20,
+    offset: int = 0,
     rating: int | None = None,
     rating_max: int | None = None,
     orden: str = "recientes",
@@ -390,17 +392,19 @@ def reviews_recientes(
     `rating_max` filtra por calificación <= N (ej: rating_max=2 = quejas).
     `orden`      "recientes" (default) o "likes" (más útiles primero).
     `desde`/`hasta` filtran por fecha_publicacion, formato "YYYY-MM-DD".
+    `offset`     cuántos resultados saltar (para "cargar más" / paginación).
     """
     col_recurso = get_col(COL_RECURSO)
     col_lugar   = get_col(COL_LUGAR)
     limite = max(1, min(limite, 100))
+    offset = max(0, offset)
 
     match: dict = {"origen.plataforma": "GoogleReviews"}
     if lugar_id:
         try:
             match["lugar_id"] = ObjectId(lugar_id)
         except Exception:
-            return {"exito": True, "data": []}
+            return {"exito": True, "data": [], "total": 0}
 
     if rating is not None:
         match["metadata.metricas.rating"] = rating
@@ -415,8 +419,10 @@ def reviews_recientes(
             rango_fecha["$lte"] = hasta + "T23:59:59Z"
         match["fecha_publicacion"] = rango_fecha
 
+    total = col_recurso.count_documents(match)
+
     campo_orden = "metadata.metricas.likes" if orden == "likes" else "fecha_publicacion"
-    docs = list(col_recurso.find(match).sort(campo_orden, -1).limit(limite))
+    docs = list(col_recurso.find(match).sort(campo_orden, -1).skip(offset).limit(limite))
 
     lugares_cache: dict[str, str] = {}
     resultado = []
@@ -440,6 +446,83 @@ def reviews_recientes(
             "fecha": d.get("fecha_publicacion"),
             "lugar_nombre": nombre_lugar,
             "url": meta.get("urls", {}).get("review", ""),
+            "imagenes": meta.get("imagenes", []) or [],
         })
 
-    return {"exito": True, "data": resultado}
+    return {
+        "exito": True,
+        "data": resultado,
+        "total": total,
+        "offset": offset,
+        "hay_mas": (offset + len(resultado)) < total,
+    }
+
+
+@router.get("/reviews-imagenes")
+def reviews_imagenes(lugar_id: str | None = None, limite: int = 60):
+    """
+    Todas las fotos subidas en las reseñas de Google, aplanadas en una
+    sola lista (para mostrarlas como galería/collage). Si se pasa
+    `lugar_id`, solo trae las de ese lugar. No incluye las fotos marcadas
+    como "no corresponde" desde la propia galería.
+    """
+    col = get_col(COL_RECURSO)
+    col_ocultas = get_col(COL_IMAGEN_OCULTA)
+    limite = max(1, min(limite, 200))
+
+    urls_ocultas = {d["url"] for d in col_ocultas.find({}, {"url": 1})}
+
+    match: dict = {
+        "origen.plataforma": "GoogleReviews",
+        "metadata.imagenes": {"$exists": True, "$ne": []},
+    }
+    if lugar_id:
+        try:
+            match["lugar_id"] = ObjectId(lugar_id)
+        except Exception:
+            return {"exito": True, "data": []}
+
+    # Traemos de más porque algunas se van a descartar por estar ocultas.
+    docs = list(col.find(
+        match,
+        {"metadata.imagenes": 1, "metadata.autor.name": 1, "metadata.metricas.rating": 1, "fecha_publicacion": 1}
+    ).sort("fecha_publicacion", -1).limit(limite * 2))
+
+    fotos = []
+    for d in docs:
+        meta = d.get("metadata", {})
+        for url in (meta.get("imagenes") or []):
+            if url in urls_ocultas:
+                continue
+            fotos.append({
+                "url": url,
+                "autor": meta.get("autor", {}).get("name", "—"),
+                "rating": meta.get("metricas", {}).get("rating"),
+            })
+            if len(fotos) >= limite:
+                break
+        if len(fotos) >= limite:
+            break
+
+    return {"exito": True, "data": fotos}
+
+
+class OcultarImagenBody(BaseModel):
+    url: str
+
+
+@router.post("/reviews-imagenes/ocultar")
+def ocultar_imagen(body: OcultarImagenBody):
+    """
+    Marca una foto como "no corresponde" para que deje de salir en la
+    galería/collage. No borra la reseña ni la foto original, solo la
+    excluye de la vista (se puede revertir quitando el registro de la
+    colección imagen_oculta directamente en Mongo si hiciera falta).
+    """
+    col = get_col(COL_IMAGEN_OCULTA)
+    col.update_one(
+        {"url": body.url},
+        {"$set": {"url": body.url, "ocultada_en": ahora_utc().isoformat()}},
+        upsert=True,
+    )
+    return {"exito": True}

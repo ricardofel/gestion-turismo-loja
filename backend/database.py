@@ -15,6 +15,7 @@ COL_RECURSO  = "recurso"
 COL_EVENTO   = "evento"
 COL_EDICION  = "edicion"
 COL_LUGAR    = "lugar"
+COL_IMAGEN_OCULTA = "imagen_oculta"  # URLs de fotos de reviews marcadas como "no corresponde"
 
 MONGO_URI = os.getenv("MONGO_URI", "")
 MONGO_DB  = os.getenv("MONGO_DB", "turismo_loja")

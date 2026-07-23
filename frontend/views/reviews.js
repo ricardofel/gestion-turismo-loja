@@ -13,6 +13,38 @@ function estrellas(rating) {
   return `<span style="color:var(--gold);letter-spacing:1px">${'★'.repeat(llenas)}${'☆'.repeat(5 - llenas)}</span>`;
 }
 
+function escaparAtributo(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+}
+
+function renderGaleriaHTML(nombreLugar, fotos) {
+  if (!fotos.length) {
+    return `
+      ${seccion(`Fotos de las reseñas — ${nombreLugar}`)}
+      <div class="card"><div class="empty"><p>Ninguna reseña de este lugar trae fotos todavía.</p></div></div>`;
+  }
+  return `
+    ${seccion(`Fotos de las reseñas — ${nombreLugar} (${fotos.length})`)}
+    <div class="card">
+      <p style="font-size:11px;color:var(--muted);margin:0 0 10px">
+        Si una foto no corresponde al lugar, pasa el mouse y dale a la "×" para quitarla de la galería.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px" id="galeria-grid">
+        ${fotos.map(f => `
+          <div class="galeria-item" data-url="${escaparAtributo(f.url)}" style="position:relative;width:110px;height:110px">
+            <a href="${f.url}" target="_blank" rel="noopener" title="${f.autor}${f.rating ? ` · ${f.rating}★` : ''}">
+              <img src="${f.url}" alt="Foto de reseña de ${f.autor}" loading="lazy"
+                   style="width:110px;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block">
+            </a>
+            <button type="button" class="galeria-quitar" title="No corresponde a este lugar — quitar de la galería"
+              style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;font-size:13px;line-height:20px;text-align:center;cursor:pointer;padding:0">
+              ×
+            </button>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
 function renderReviewCardHTML(r) {
   const fecha = r.fecha ? new Date(r.fecha).toLocaleDateString('es-EC', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
   return `
@@ -29,6 +61,14 @@ function renderReviewCardHTML(r) {
       </div>
       ${r.lugar_nombre ? `<div style="font-size:11px;color:var(--muted);margin-bottom:4px">${r.lugar_nombre}</div>` : ''}
       <p style="font-size:13px;color:var(--text);line-height:1.5;margin:0">${r.texto || '(sin comentario, solo calificación)'}</p>
+      ${(r.imagenes && r.imagenes.length) ? `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        ${r.imagenes.map(url => `
+          <a href="${url}" target="_blank" rel="noopener">
+            <img src="${url}" alt="Foto de la reseña" loading="lazy"
+                 style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
+          </a>`).join('')}
+      </div>` : ''}
     </div>`;
 }
 
@@ -147,6 +187,8 @@ export async function render(container) {
       </div>` : ''}
     </div>` : ''}
 
+    <div id="galeria-fotos-container"></div>
+
     ${seccion('Reseñas recientes')}
     <div class="card">
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px">
@@ -183,10 +225,21 @@ export async function render(container) {
           Limpiar filtros
         </button>
       </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--muted)" id="reviews-contador">
+          ${recientesData.length ? `Mostrando ${recientesData.length} de ${recientes?.total ?? recientesData.length}` : ''}
+        </span>
+      </div>
       <div id="reviews-lista">
         ${recientesData.length
           ? recientesData.map(renderReviewCardHTML).join('')
           : `<div class="empty"><p>Sin reseñas para mostrar.</p></div>`}
+      </div>
+      <div style="text-align:center;margin-top:14px">
+        <button id="reviews-cargar-mas" type="button"
+          style="border:1px solid var(--border);background:var(--white);border-radius:6px;padding:8px 20px;font-size:13px;cursor:pointer;color:var(--navy);display:${recientes?.hay_mas ? 'inline-block' : 'none'}">
+          Cargar más
+        </button>
       </div>
     </div>
   `;
@@ -198,11 +251,57 @@ export async function render(container) {
   const inputHasta   = container.querySelector('#reviews-hasta');
   const btnReset     = container.querySelector('#reviews-reset');
   const listaEl      = container.querySelector('#reviews-lista');
+  const galeriaEl    = container.querySelector('#galeria-fotos-container');
 
-  async function actualizarLista() {
-    listaEl.innerHTML = `<div class="empty"><p>Cargando...</p></div>`;
+  galeriaEl.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('.galeria-quitar');
+    if (!btn) return;
+    const item = btn.closest('.galeria-item');
+    const url = item?.dataset.url;
+    if (!url) return;
 
-    const params = new URLSearchParams({ limite: '20' });
+    btn.disabled = true;
+    try {
+      await apiFetch('/api/stats/reviews-imagenes/ocultar', {
+        method: 'POST',
+        body: JSON.stringify({ url }),
+      });
+      item.remove();
+      const titulo = galeriaEl.querySelector('div[style*="uppercase"]');
+      if (titulo) {
+        const restantes = galeriaEl.querySelectorAll('.galeria-item').length;
+        titulo.textContent = titulo.textContent.replace(/\(\d+\)/, `(${restantes})`);
+      }
+    } catch {
+      btn.disabled = false;
+      alert('No se pudo quitar la foto. Intenta de nuevo.');
+    }
+  });
+  const contadorEl   = container.querySelector('#reviews-contador');
+  const btnCargarMas = container.querySelector('#reviews-cargar-mas');
+
+  const TAM_LOTE = 20;
+  let offsetActual = recientesData.length;
+  let totalActual  = recientes?.total ?? recientesData.length;
+
+  async function actualizarGaleria() {
+    const lugarId = selectLugar.value;
+    if (!lugarId) {
+      galeriaEl.innerHTML = '';
+      return;
+    }
+    const nombreLugar = selectLugar.options[selectLugar.selectedIndex].text;
+    galeriaEl.innerHTML = `${seccion(`Fotos de las reseñas — ${nombreLugar}`)}<div class="card"><div class="empty"><p>Cargando fotos...</p></div></div>`;
+    try {
+      const resp = await apiFetch(`/api/stats/reviews-imagenes?lugar_id=${lugarId}&limite=60`);
+      galeriaEl.innerHTML = renderGaleriaHTML(nombreLugar, resp?.data || []);
+    } catch {
+      galeriaEl.innerHTML = `${seccion(`Fotos de las reseñas — ${nombreLugar}`)}<div class="card"><div class="empty"><p>No se pudieron cargar las fotos.</p></div></div>`;
+    }
+  }
+
+  function construirParams(offset) {
+    const params = new URLSearchParams({ limite: String(TAM_LOTE), offset: String(offset) });
     if (selectLugar.value)  params.set('lugar_id', selectLugar.value);
     if (selectOrden.value)  params.set('orden', selectOrden.value);
     if (inputDesde.value)   params.set('desde', inputDesde.value + '-01');
@@ -216,27 +315,64 @@ export async function render(container) {
     } else if (selectRating.value) {
       params.set('rating', selectRating.value);
     }
+    return params;
+  }
+
+  function actualizarContadorYBoton() {
+    contadorEl.textContent = totalActual > 0 ? `Mostrando ${offsetActual} de ${totalActual}` : '';
+    btnCargarMas.style.display = offsetActual < totalActual ? 'inline-block' : 'none';
+  }
+
+  async function actualizarLista() {
+    listaEl.innerHTML = `<div class="empty"><p>Cargando...</p></div>`;
+    offsetActual = 0;
 
     try {
-      const resp = await apiFetch(`/api/stats/reviews-recientes?${params.toString()}`);
+      const resp = await apiFetch(`/api/stats/reviews-recientes?${construirParams(0).toString()}`);
       const data = resp?.data || [];
+      totalActual = resp?.total ?? data.length;
+      offsetActual = data.length;
       listaEl.innerHTML = data.length
         ? data.map(renderReviewCardHTML).join('')
         : `<div class="empty"><p>Sin reseñas para estos filtros.</p></div>`;
+      actualizarContadorYBoton();
     } catch {
       listaEl.innerHTML = `<div class="empty"><p>No se pudo aplicar el filtro.</p></div>`;
+      contadorEl.textContent = '';
+      btnCargarMas.style.display = 'none';
     }
   }
 
+  async function cargarMas() {
+    btnCargarMas.textContent = 'Cargando...';
+    btnCargarMas.disabled = true;
+    try {
+      const resp = await apiFetch(`/api/stats/reviews-recientes?${construirParams(offsetActual).toString()}`);
+      const data = resp?.data || [];
+      totalActual = resp?.total ?? totalActual;
+      offsetActual += data.length;
+      listaEl.insertAdjacentHTML('beforeend', data.map(renderReviewCardHTML).join(''));
+      actualizarContadorYBoton();
+    } catch {
+      // deja el botón visible para reintentar
+    } finally {
+      btnCargarMas.textContent = 'Cargar más';
+      btnCargarMas.disabled = false;
+    }
+  }
+
+  selectLugar.addEventListener('change', actualizarGaleria);
   [selectLugar, selectRating, selectOrden, inputDesde, inputHasta].forEach(el =>
     el.addEventListener('change', actualizarLista)
   );
+  btnCargarMas.addEventListener('click', cargarMas);
   btnReset.addEventListener('click', () => {
     selectLugar.value = '';
     selectRating.value = '';
     selectOrden.value = 'recientes';
     inputDesde.value = '';
     inputHasta.value = '';
+    galeriaEl.innerHTML = '';
     actualizarLista();
   });
 }

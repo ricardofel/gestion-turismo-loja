@@ -13,5 +13,5 @@ from .base    import ConectorBase
 
 CONECTORES: dict[str, ConectorBase] = {
     "YouTube": ConectorYouTubeReal(),
-    "Google Reviews": ConectorGoogleReviews(),
+    "GoogleReviews": ConectorGoogleReviews(),
 }
