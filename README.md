@@ -17,26 +17,27 @@ Proyecto académico · Universidad Técnica Particular de Loja (UTPL) · 2026
 
 ## ¿Qué es esto?
 
-Un sistema que **ingiere contenido real de redes sociales** (por ahora,
-YouTube) sobre atractivos turísticos de Loja, lo clasifica automáticamente
-por **lugar**, **evento** y **edición**, y lo expone en un dashboard con
-estadísticas y un panel de administración para curar los datos a mano
-cuando la detección automática no alcanza.
+Un sistema que **ingiere contenido real de redes sociales** (YouTube y
+Google Reviews) sobre atractivos turísticos de Loja, lo clasifica
+automáticamente por **lugar**, **evento** y **edición**, y lo expone en un
+dashboard con estadísticas y un panel de administración para curar los
+datos a mano cuando la detección automática no alcanza.
 
 No es una demo con datos inventados: corre contra un cluster real de
-MongoDB Atlas compartido por todo el equipo, y la fuente de YouTube trae
-videos reales, con su propio pipeline de deduplicación para no volver a
-procesar lo mismo dos veces.
+MongoDB Atlas compartido por todo el equipo. YouTube trae videos reales
+con deduplicación propia, y Google Reviews trae reseñas reales (texto,
+calificación, autor y fotos) vía SerpApi, paginando hasta traer todo el
+histórico disponible de cada lugar.
 
 ## ✨ Características
 
-- **Ingesta ETL real** desde YouTube Data API v3, con control de cuota
-  diaria y caché para no desperdiciarla.
+- **Ingesta ETL real** desde YouTube Data API v3 y Google Reviews (vía
+  SerpApi), con control de cuota diaria y caché para no desperdiciarla.
 - **Detección automática** de lugar y evento/edición a partir del texto del
   contenido — y si no existe la edición correspondiente a un año detectado,
   el sistema **la crea sola**, calculando su estado (Planificada / En curso
   / Finalizada) por calendario.
-- **Deduplicación** — un mismo video nunca se inserta dos veces, sin
+- **Deduplicación** — un mismo video/reseña nunca se inserta dos veces, sin
   importar cuántas veces se vuelva a extraer.
 - **CRUD completo** de Lugares, Eventos y Ediciones, con buscador en vivo,
   detección de nombres duplicados/parecidos (typos, variantes de redacción)
@@ -45,12 +46,23 @@ procesar lo mismo dos veces.
 - **Editor de recursos enriquecido** — permite reasignar lugar y evento →
   edición (en cascada) a mano, para los casos donde la detección automática
   no encontró coincidencia.
-- **Dashboard con estadísticas reales**: distribución por plataforma y
-  estado, línea de tiempo de ingesta mensual, ranking de eventos por
+- **Dashboard con estadísticas reales**: distribución por plataforma
+  (circular) y estado, línea de tiempo de ingesta mensual con filtro
+  interactivo por rango de fechas y comparación automática contra el mes
+  anterior, alcance de YouTube (vistas/likes/comentarios y video más
+  visto), nube de hashtags y palabra más repetida, mapa de puntos de
+  lugares turísticos, buscador de lugares, y ranking de eventos por
   recursos asociados.
+- **Módulo Reviews** — panel dedicado a las reseñas de Google: resumen de
+  calificaciones, lugares mejor calificados, palabras más repetidas,
+  listado de reseñas filtrable por lugar/calificación/fecha con
+  paginación ("Cargar más"), y una **galería de fotos por lugar** con
+  opción de ocultar fotos que no correspondan al sitio (sin borrar la
+  reseña completa).
 - **Diseñado para $0 de presupuesto** — todas las integraciones activas son
-  gratuitas y sin tarjeta de crédito; las que no lo son quedan documentadas
-  para cuando haya presupuesto (ver `guia_implementacion_apis.md`).
+  gratuitas o de bajo costo por uso, sin necesidad de tarjeta de crédito
+  de Google Cloud; las que no lo son quedan documentadas para cuando haya
+  presupuesto (ver `guia_implementacion_apis.md`).
 
 ## 🛠️ Stack tecnológico
 
@@ -60,7 +72,7 @@ procesar lo mismo dos veces.
 | Base de datos | MongoDB Atlas (cluster compartido en la nube) |
 | Frontend | HTML + JavaScript puro (ES Modules) · sin frameworks ni build step |
 | Estilos | CSS propio + Tailwind (CDN, solo utilidades puntuales) |
-| Ingesta | YouTube Data API v3 |
+| Ingesta | YouTube Data API v3 · Google Reviews (vía SerpApi) |
 
 Sin React, sin Vue, sin bundlers — el frontend es JS nativo servido tal cual.
 
@@ -93,14 +105,14 @@ gestion-turismo-loja/
 │   ├── main.py           ← punto de entrada FastAPI
 │   ├── database.py       ← conexión a MongoDB
 │   ├── schemas.py        ← validación Pydantic
-│   ├── connectors/       ← conectores ETL (hoy: YouTube real)
+│   ├── connectors/       ← conectores ETL (YouTube y Google Reviews reales)
 │   ├── etl/pipeline.py   ← transformación, deduplicación, detección
 │   ├── scripts/          ← utilidades de mantenimiento de datos
 │   └── routes/           ← endpoints de la API
 └── frontend/
     ├── index.html        ← shell + estilos
     ├── app.js             ← router de la SPA
-    ├── views/              ← una vista por sección (Inicio, Base de Datos, ETL...)
+    ├── views/              ← una vista por sección (Inicio, Base de Datos, ETL, Reviews...)
     └── components/          ← piezas reutilizables (autocomplete, modales, etc.)
 ```
 
@@ -110,7 +122,7 @@ gestion-turismo-loja/
 |---|---|
 | [`guia_instalacion.md`](guia_instalacion.md) | Cómo levantar el proyecto de cero |
 | [`guia_implementacion_apis.md`](guia_implementacion_apis.md) | Qué APIs están activas y cuáles quedan pendientes de presupuesto |
-| [`guia_implementacion_eda.md`](guia_implementacion_eda.md) | Qué falta en el módulo de estadísticas del Home |
+| [`guia_implementacion_eda.md`](guia_implementacion_eda.md) | Estado del módulo de estadísticas (Home + Reviews) |
 
 ## Licencia
 

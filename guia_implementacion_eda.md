@@ -1,29 +1,49 @@
-# Guía de Implementación — Módulo EDA (Home / Dashboard)
+# Guía de Implementación — Módulo EDA (Home / Dashboard / Reviews)
 ## Proyecto ETL Turismo Loja · UTPL 2026
-### Actualizado 2026-07 — la mayor parte de esto ya está hecho, lee el estado antes de empezar
+### Actualizado 2026-07 — el módulo EDA está terminado, este documento ahora es de referencia
 
 ---
 
-## 0. Estado actual — léelo antes de tocar nada
+## 0. Estado actual — todo lo planeado originalmente ya está hecho
 
-Esta guía originalmente describía crear todo el módulo de estadísticas desde
-cero. **Ya no es así.** El dashboard de Home ya está implementado y
-funcionando con datos reales. Antes de escribir código, confirma esto
-corriendo el proyecto (ver `guia_instalacion.md`) y abriendo la pestaña
-Inicio — deberías ver KPIs, gráficas de plataforma/estado, línea de tiempo
-de ingesta mensual, y un ranking de eventos con su "evento más popular".
+Esta guía originalmente describía crear el módulo de estadísticas desde
+cero, y luego agregar solo "Top lugares". **Ambas etapas ya se completaron
+y el alcance creció bastante más** — el dashboard de Inicio tiene análisis
+exploratorio completo, y se agregó un módulo nuevo (**Reviews**) dedicado a
+las reseñas de Google. Antes de tocar código, corre el proyecto (ver
+`guia_instalacion.md`) y revisa las pestañas **Inicio** y **Reviews** para
+ver el estado real.
 
-**Lo único que falta es una sección: "Top lugares".** Ver sección 4.
-
-| Dato | Estado |
+| Sección (Inicio) | Estado |
 |------|--------|
-| Total de recursos | ✅ Hecho — `/api/stats/resumen` |
-| Distribución por plataforma | ✅ Hecho — `/api/stats/resumen` |
+| KPIs generales (recursos, fuentes, eventos, lugares) | ✅ Hecho — `/api/stats/resumen` |
+| Distribución por plataforma (gráfico circular) | ✅ Hecho — `/api/stats/resumen` |
 | Distribución por estado de procesamiento | ✅ Hecho — `/api/stats/resumen` |
-| Ingesta mensual (línea de tiempo) | ✅ Hecho — `/api/stats/ingesta-mensual` |
-| Eventos registrados / lugares registrados (KPI) | ✅ Hecho — catálogos cargados en `app.js` |
+| Ingesta mensual, con filtro interactivo por rango de fechas | ✅ Hecho — `/api/stats/ingesta-mensual?desde=&hasta=` |
+| Comparación mes actual vs. mes anterior | ✅ Hecho — calculado en el frontend con los mismos datos |
+| Alcance de YouTube (vistas/likes/comentarios + video más visto) | ✅ Hecho — `/api/stats/engagement` |
+| Hashtags más usados (nube de palabras) | ✅ Hecho — `/api/stats/hashtags` |
+| Palabra más repetida en descripciones | ✅ Hecho — `/api/stats/palabras-frecuentes` |
 | Top eventos por recursos + evento más popular | ✅ Hecho — `/api/stats/eventos` |
-| **Top lugares por recursos** | ❌ **Falta — tu tarea** |
+| Top lugares por recursos, con buscador | ✅ Hecho — `/api/stats/top-lugares?limite=` |
+| Mapa de puntos de lugares (por cantidad de recursos) | ✅ Hecho — calculado en el frontend con lat/lon de `top-lugares` |
+
+| Sección (Reviews) | Estado |
+|------|--------|
+| Resumen de calificaciones (promedio, % Local Guides, distribución de estrellas) | ✅ Hecho — `/api/stats/reviews-resumen` |
+| Lugares con más reseñas + calificación promedio | ✅ Hecho — `/api/stats/reviews-por-lugar` |
+| Listado de reseñas, filtrable por lugar/calificación/orden/fecha | ✅ Hecho — `/api/stats/reviews-recientes` |
+| Paginación ("Cargar más") en el listado | ✅ Hecho — parámetros `offset`/`total`/`hay_mas` |
+| Galería de fotos por lugar | ✅ Hecho — `/api/stats/reviews-imagenes` |
+| Ocultar fotos que no corresponden al lugar | ✅ Hecho — `/api/stats/reviews-imagenes/ocultar` + colección `imagen_oculta` |
+
+**Si necesitas agregar algo nuevo a cualquiera de las dos vistas**, el
+patrón a seguir es el mismo que se usó para todo lo anterior: un endpoint
+nuevo en `backend/routes/stats.py` (siempre devolviendo
+`{"exito": true, ...}`), y una llamada + bloque de UI nuevo en
+`frontend/views/home.js` o `frontend/views/reviews.js` según corresponda,
+reusando las clases CSS que ya existen (`chart-card`, `bar-row`,
+`stat-card`, `.card`, etc. — todas viven en `index.html`).
 
 ---
 
@@ -43,84 +63,52 @@ entorno), sigue `guia_instalacion.md` en la raíz — no lo repito aquí.
 
 ---
 
-## 2. Los archivos que vas a modificar
+## 2. Archivos involucrados en el módulo EDA/Reviews
 
-### ARCHIVO 1 — Backend: `backend/routes/stats.py` (YA EXISTE — agrega un endpoint)
+### Backend
 
-Ya tiene `/resumen`, `/ingesta-mensual` y `/eventos`. Agrega `/top-lugares`
-siguiendo el mismo patrón que `stats_eventos()` (líneas 89-134 del archivo):
+- `backend/routes/stats.py` — todos los endpoints de estadísticas de
+  Inicio y de Reviews viven aquí. Once endpoints en total a la fecha:
+  `/resumen`, `/ingesta-mensual`, `/eventos`, `/top-lugares`, `/engagement`,
+  `/hashtags`, `/palabras-frecuentes`, `/reviews-resumen`,
+  `/reviews-por-lugar`, `/reviews-recientes`, `/reviews-imagenes` y
+  `/reviews-imagenes/ocultar`.
+- `backend/connectors/google_reviews.py` — conector real de Google Reviews
+  vía SerpApi (ver `guia_implementacion_apis.md` para el detalle de esta
+  integración).
+- `backend/database.py` — agrega la colección `imagen_oculta` (URLs de
+  fotos marcadas como "no corresponde" desde la galería).
 
-```python
-@router.get("/top-lugares")
-def top_lugares():
-    """
-    Los lugares con más recursos asociados.
-    """
-    col_recurso = get_col(COL_RECURSO)
-    col_lugar   = get_col(COL_LUGAR)
+### Frontend
 
-    por_lugar = list(col_recurso.aggregate([
-        {"$match": {"lugar_id": {"$ne": None}}},
-        {"$group": {"_id": "$lugar_id", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-        {"$limit": 5}
-    ]))
+- `frontend/views/home.js` — dashboard de Inicio completo.
+- `frontend/views/reviews.js` — vista nueva, dedicada a Google Reviews
+  (estadísticas, listado filtrable, galería de fotos).
+- `frontend/views/lugares.js` — se agregó el campo **"ID de Google Maps"**
+  (`google_data_id`) para poder asociar reviews reales a cada lugar.
+- `frontend/app.js` — se agregó la ruta `reviews` y su entrada en el menú.
+- `frontend/index.html` — se agregó el botón de navegación "Reviews".
 
-    resultado = []
-    for item in por_lugar:
-        lugar = col_lugar.find_one({"_id": item["_id"]}, {"nombre": 1, "tipo_lugar": 1})
-        if lugar:
-            resultado.append({
-                "nombre"    : lugar["nombre"],
-                "tipo_lugar": lugar.get("tipo_lugar", ""),
-                "count"     : item["count"],
-            })
+### Scripts de mantenimiento (`backend/scripts/`)
 
-    return {"exito": True, "data": resultado}
-```
-
-`COL_LUGAR` ya está importado en el archivo (se usa en el import de
-`database` al inicio). No hace falta tocar `routes/__init__.py` ni
-`main.py` — el router `stats_router` ya está registrado, un endpoint nuevo
-dentro de un router existente no necesita registro adicional.
-
-### ARCHIVO 2 — Frontend: `frontend/views/home.js` (MODIFICAR)
-
-Agrega la llamada al nuevo endpoint junto a las que ya existen (línea ~24):
-
-```javascript
-const [resumen, ingesta, statsEventos, statsLugares] = await Promise.all([
-  apiFetch('/api/stats/resumen'),
-  apiFetch('/api/stats/ingesta-mensual'),
-  apiFetch('/api/stats/eventos'),
-  apiFetch('/api/stats/top-lugares'),   // ← nuevo
-]);
-```
-
-Y agrega una sección de UI para mostrarlo. La forma más simple es reusar el
-patrón de barras que ya existe para "Por plataforma" (`chart-card` +
-`bar-row`/`bar-track`/`bar-fill`, ver líneas 92-106 del archivo actual), con
-un `chart-card` nuevo para "Top lugares" cerca de la sección de eventos.
-No hace falta CSS nuevo — las clases `.chart-card`, `.bar-row`, `.bar-track`,
-`.bar-fill`, `.bar-count` ya están definidas en `index.html`.
-
-**Importante:** `home.js` ya usa un token de navegación (`esTokenVigente`,
-ver `components/nav-state.js`) para evitar que el dashboard se pinte encima
-de otra vista si el usuario navega antes de que termine de cargar. Si
-agregas la llamada a `top-lugares` dentro del mismo `Promise.all`, ese
-comportamiento se mantiene automáticamente — no necesitas tocar nada de esa
-lógica.
+- `importar_reviews_manual.py` / `importar_reviews_sinteticas.py` — para
+  cargar datasets de ejemplo/prueba (no reseñas reales), usados solo
+  durante el desarrollo de este módulo.
+- `limpiar_reviews_prueba.py` — borra datos mock/de prueba de la colección
+  `recurso` antes de una extracción real (requiere `--confirmar`).
+- `ver_tamano_bd.py` — reporta el tamaño real de la base de datos contra
+  el límite del plan de MongoDB Atlas (ej. 500 MB en el tier gratuito).
 
 ---
 
-## 3. Cosas que NO debes tocar
+## 3. Cosas que NO debes tocar sin coordinarlo con el equipo
 
-| Archivo | Por qué no tocarlo |
+| Archivo | Por qué no tocarlo a la ligera |
 |---------|-------------------|
 | `backend/database.py` | Conexión a MongoDB, la tocan todos los módulos |
 | `backend/schemas.py` | Validación de documentos, crítico |
-| `backend/connectors/*` | Conectores ETL, módulo separado (ver `guia_implementacion_apis.md`) |
-| `backend/etl/pipeline.py` | Pipeline de transformación |
+| `backend/connectors/base.py` | Clase base de todos los conectores |
+| `backend/etl/pipeline.py` | Pipeline de transformación de todas las fuentes |
 | `frontend/app.js` | Router principal, catálogos globales, token de navegación |
 | `frontend/components/*` | Componentes reutilizables |
 | `frontend/views/database.js` | Vista de base de datos |
@@ -134,9 +122,13 @@ lógica.
 **Backend:**
 - Todos los endpoints devuelven siempre `{ "exito": True, ... }`
 - Los nombres de campos en español con snake_case
-- No usar `print()` para debug en código nuevo de este módulo
-- No crear colecciones nuevas en MongoDB — usa las que existen:
-  `recurso`, `evento`, `edicion`, `lugar`
+- No usar `print()` para debug en código nuevo de este módulo (los
+  conectores sí usan `print()` deliberadamente, para dar visibilidad del
+  progreso de extracción en la terminal — eso es intencional, no un error)
+- No crear colecciones nuevas en MongoDB sin necesidad real — la única
+  colección nueva que se agregó en este módulo es `imagen_oculta`, y fue
+  deliberado (permite revertir el ocultamiento de una foto sin tocar la
+  reseña original)
 
 **Frontend:**
 - No usar `fetch()` directo, usar siempre `apiFetch()` de
@@ -153,12 +145,11 @@ lógica.
 ## 5. Verificar que funciona
 
 ```
-GET http://127.0.0.1:8000/api/stats/top-lugares
+GET http://127.0.0.1:8000/api/stats/resumen
+GET http://127.0.0.1:8000/api/stats/reviews-resumen
 ```
 
-Ábrelo en el navegador antes de conectarlo al frontend y verifica que el
-JSON tiene la estructura `{ "exito": true, "data": [{ "nombre": ..., "count": ... }, ...] }`.
-
-Luego, en el Home, confirma que la nueva sección aparece con datos reales y
-que no rompe el resto del dashboard (KPIs, gráficas de plataforma/estado,
-ingesta mensual y eventos deben seguir funcionando igual).
+Ábrelos en el navegador y confirma que devuelven `"exito": true` con datos.
+Luego, en el sistema, confirma que **Inicio** y **Reviews** cargan sin
+errores en la consola del navegador (F12 → Console) y que los filtros de
+cada sección (fechas, calificación, lugar) responden correctamente.

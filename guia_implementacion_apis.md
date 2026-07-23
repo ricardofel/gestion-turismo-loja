@@ -5,9 +5,10 @@
 
 ## Estado actual (2026-07)
 
-Solo **YouTube Data API v3** quedó activa como fuente real.
-Es la única que es 100% gratuita, self-service (sin aprobación de terceros) y
-sin necesidad de tarjeta de crédito.
+**YouTube Data API v3** y **Google Reviews (vía SerpApi)** están activas
+como fuentes reales. Ambas son viables sin depender de aprobaciones de
+terceros: YouTube es 100% gratuita, y Google Reviews vía SerpApi es de
+pago por uso (no requiere tarjeta de Google Cloud ni aprobación).
 
 El resto de fuentes que se evaluaron quedaron **descartadas por ahora** —no
 por falta de interés, sino porque no son viables sin inversión económica o
@@ -17,9 +18,10 @@ gestionar la aprobación.
 
 ```
 backend/connectors/
-  base.py      ← clase base ConectorBase, no se toca
-  registry.py  ← registro de conectores activos (hoy: solo YouTube)
-  youtube.py   ← ConectorYouTubeReal, conectado a YouTube Data API v3
+  base.py            ← clase base ConectorBase, no se toca
+  registry.py        ← registro de conectores activos (YouTube + GoogleReviews)
+  youtube.py         ← ConectorYouTubeReal, conectado a YouTube Data API v3
+  google_reviews.py  ← ConectorGoogleReviews, conectado a SerpApi (google_maps_reviews)
 ```
 
 **Regla:** el método `extraer_raw()` de un conector debe devolver siempre una
@@ -29,7 +31,7 @@ detectar lugar y edición).
 
 ---
 
-## Fuente activa
+## Fuentes activas
 
 ### YouTube Data API v3 — ACTIVA
 - Gratuita, activación inmediata (minutos), sin aprobación de terceros.
@@ -41,6 +43,33 @@ detectar lugar y edición).
 - Configuración: agrega `YOUTUBE_API_KEY=AIza...` a `backend/.env`.
   Se obtiene en [console.cloud.google.com](https://console.cloud.google.com)
   → habilitar "YouTube Data API v3" → Credentials → Create API Key.
+
+### Google Reviews (vía SerpApi) — ACTIVA
+- **No es la Google Places API** (esa sigue descartada más abajo, por la
+  tarjeta de crédito). SerpApi es un servicio intermediario de pago por
+  búsqueda que hace de "scraper" de Google Maps sin necesidad de cuenta de
+  facturación de Google Cloud.
+- Identifica un lugar por su `data_id` (no por nombre) — cada lugar del
+  catálogo necesita este dato guardado en el campo **"ID de Google Maps"**
+  desde la pantalla Lugares del sistema. Se obtiene buscando el lugar (por
+  nombre o coordenadas GPS) en la
+  [Google Maps API de SerpApi](https://serpapi.com/google-maps-api) y
+  copiando el `data_id` del resultado.
+- El conector (`backend/connectors/google_reviews.py`) pagina
+  automáticamente con `next_page_token` hasta traer **todo el histórico
+  disponible** de cada lugar (sin tope de negocio, solo un límite de
+  seguridad técnico de 500 páginas por lugar).
+- **Limitación conocida de Google, no del conector:** para negocios con
+  muchas reseñas, Google deja de exponer más resultados vía paginación
+  bastante antes de llegar al total que muestra públicamente en la
+  interfaz de Maps (ej: un lugar con 1,091 reseñas mostradas puede devolver
+  solo ~400-450 vía API). Es una restricción del lado de Google, documentada
+  también por SerpApi, y no hay forma de evitarla desde el cliente.
+- Costo: pago por búsqueda en tu cuenta SerpApi (cada página de hasta 20
+  reseñas = 1 búsqueda). Un lugar con muchas reseñas puede consumir bastante
+  cuota — revisa tu dashboard de SerpApi después de extraer.
+- Configuración: agrega `SERPAPI_KEY=...` a `backend/.env`. Se obtiene en
+  [serpapi.com/manage-api-key](https://serpapi.com/manage-api-key).
 
 ---
 
@@ -67,14 +96,18 @@ En la práctica esta API está limitada casi exclusivamente a socios de la
 industria de viajes. Proyectos académicos pequeños suelen ser rechazados o
 no reciben respuesta. Requiere gestión activa y sin garantía de éxito.
 
-### Google Places API — requiere tarjeta de crédito
+### Google Places API — requiere tarjeta de crédito (reviews ya resueltas por otra vía)
 Google reestructuró el pricing de Maps Platform: ya no existe el crédito
 plano de $200/mes para todo, ahora es un tier gratuito por SKU. Además,
 **exige una cuenta de facturación con tarjeta de crédito activa** para
 poder crear la key, aunque el uso se mantenga en $0. Costo real si se activa
-con volumen: ~$17 por 1,000 reseñas.
+con volumen: ~$17 por 1,000 reseñas. **Esta limitación ya no bloquea las
+reseñas de Google** — se resolvió por otra vía (SerpApi, ver "Fuentes
+activas" arriba), que no pide tarjeta de crédito. Esta API seguiría siendo
+útil si en el futuro se necesita, por ejemplo, autocompletado de
+direcciones o datos oficiales de Google Places distintos a reseñas.
 - Opción de pago sin tarjeta de Google: Apify Google Maps Reviews Scraper
-  (~$20/mes).
+  (~$20/mes) — alternativa a SerpApi si hiciera falta.
 
 ### TikTok Research API — acceso académico incierto para instituciones fuera de EEUU/UE
 El acceso académico de TikTok ha estado históricamente limitado a
@@ -96,10 +129,11 @@ Proceso largo (1-2 semanas) y con alta tasa de rechazo para apps pequeñas.
 | Fuente         | Estado          | Costo si se activa   | Dificultad |
 |----------------|-----------------|----------------------|------------|
 | YouTube        | ✅ Activa        | $0                   | Ya hecho |
+| Google Reviews | ✅ Activa (SerpApi) | Pago por búsqueda (SerpApi) | Ya hecho |
 | Flickr         | ❌ Requiere Pro  | Flickr Pro (~$72/año)| Baja (solo falta la key) |
 | Eventbrite     | ❌ Inviable      | —                    | No aplica (API pública cerrada) |
 | TripAdvisor    | ❌ Incierta      | Apify ~$25/mes       | Alta (aprobación no garantizada) |
-| Google Places  | ❌ Necesita tarjeta | ~$17/1000 reseñas o Apify ~$20/mes | Media |
+| Google Places  | ⚠️ Reviews resueltas por SerpApi; el resto necesita tarjeta | ~$17/1000 reseñas o Apify ~$20/mes | Media |
 | TikTok         | ❌ Incierta      | Apify ~$30/mes       | Alta (aprobación no garantizada) |
 | Instagram      | ❌ Incierta      | Apify ~$30/mes       | Alta (aprobación no garantizada) |
 
