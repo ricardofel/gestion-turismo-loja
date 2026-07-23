@@ -7,6 +7,12 @@ services:
     startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
+      # Fija la versión de Python — sin esto Render usa la última (3.14 al
+      # momento de escribir esto) y pydantic-core==2.18.2 no tiene wheel
+      # precompilado para esa versión; falla al compilar desde código
+      # fuente (requiere Rust/maturin, y el sandbox de build es read-only).
+      - key: PYTHON_VERSION
+        value: 3.11.9
       # Sin valor por defecto a propósito — no se comprometen credenciales
       # personales en el repositorio. Ver guia_despliegue_render.md.
       - key: MONGO_URI
