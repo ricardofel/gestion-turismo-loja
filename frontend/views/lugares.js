@@ -69,6 +69,17 @@ export async function render(container) {
           </p>
         </div>
 
+        <!-- Google Data ID (para traer reviews con SerpApi) -->
+        <div class="form-row">
+          <label>ID de Google Maps <span style="font-weight:400;opacity:.7">(opcional, para traer reviews)</span></label>
+          <input class="input" id="lug-google-data-id" placeholder="0x89c259af336b3341:0xa4969e07ce3108de">
+          <p style="font-size:11px;color:var(--muted);line-height:1.5;margin-top:4px">
+            Se usa para traer las reseñas de Google del lugar. Se obtiene con la
+            <a href="https://serpapi.com/playground?engine=google_maps" target="_blank" style="color:var(--navy)">Google Maps API de SerpApi</a>
+            buscando el lugar y copiando su <code>data_id</code>.
+          </p>
+        </div>
+
         <div style="display:flex;gap:8px">
           <button class="btn btn-primary" style="flex:1" id="btn-lug-guardar">Guardar lugar</button>
           <button class="btn btn-ghost" id="btn-lug-cancelar" style="display:none">Cancelar</button>
@@ -150,6 +161,9 @@ function renderListaLugares(lugares, filtroActivo = '') {
                 📍 ${l.coordenadas_geo.coordinates[1]}, ${l.coordenadas_geo.coordinates[0]}
               </span>`
             : `<span style="font-size:11px;color:#ccc;font-style:italic">Sin coordenadas</span>`}
+          ${l.google_data_id
+            ? `<span style="font-size:11px;color:var(--green)">Reviews configuradas</span>`
+            : ''}
         </div>
       </div>
       <div class="rec-actions">
@@ -180,6 +194,7 @@ async function cargarEdicion(id) {
     const coords = lugar.coordenadas_geo?.coordinates;
     document.getElementById('lug-lat').value = coords ? coords[1] : '';
     document.getElementById('lug-lon').value = coords ? coords[0] : '';
+    document.getElementById('lug-google-data-id').value = lugar.google_data_id || '';
     document.getElementById('btn-lug-cancelar').style.display = 'inline-flex';
     document.getElementById('btn-lug-guardar').textContent = 'Actualizar lugar';
     document.getElementById('lug-nombre').focus();
@@ -214,6 +229,7 @@ async function guardarLugar() {
     direccion_texto : document.getElementById('lug-dir').value.trim() || null,
     lat             : document.getElementById('lug-lat').value || null,
     lon             : document.getElementById('lug-lon').value || null,
+    google_data_id  : document.getElementById('lug-google-data-id').value.trim() || null,
   };
 
   try {
@@ -231,7 +247,7 @@ async function guardarLugar() {
 
 function resetForm() {
   editandoId = null;
-  ['lug-nombre','lug-dir','lug-lat','lug-lon'].forEach(id => {
+  ['lug-nombre','lug-dir','lug-lat','lug-lon','lug-google-data-id'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });

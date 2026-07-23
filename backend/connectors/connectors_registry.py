@@ -1,4 +1,4 @@
-﻿"""
+"""
 connectors/registry.py — Registro de conectores ETL activos.
 
 Solo aparecen aquí las fuentes con una API real conectada. Para agregar una
@@ -13,5 +13,5 @@ from .base    import ConectorBase
 
 CONECTORES: dict[str, ConectorBase] = {
     "YouTube": ConectorYouTubeReal(),
-    "Google Reviews": ConectorGoogleReviews(),
+    "GoogleReviews": ConectorGoogleReviews(),
 }

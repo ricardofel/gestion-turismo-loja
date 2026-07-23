@@ -6,8 +6,8 @@ Cualquier inserción que no cumpla esto → HTTP 422 antes de tocar la BD.
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-PLATAFORMAS_VALIDAS = {"YouTube"}
-FORMATOS_VALIDOS = {"video"}
+PLATAFORMAS_VALIDAS = {"TikTok", "YouTube", "Instagram", "GoogleReviews", "TripAdvisor", "Flickr", "Eventbrite", "mock"}
+FORMATOS_VALIDOS = {"video", "reseña", "post", "articulo", "imagen", "mock"}
 ESTADOS_VALIDOS  = {"Crudo", "Clasificado", "Error"}
 
 

@@ -8,7 +8,7 @@ const COLORES_PLAT = {
   TikTok:        '#9D174D',
   YouTube:       '#DC2626',
   Instagram:     '#7C3AED',
-  'Google Reviews': '#16A34A',
+  GoogleReviews: '#16A34A',
   TripAdvisor:   '#D97706',
   Flickr:        '#2563EB',
   Eventbrite:    '#EA580C',

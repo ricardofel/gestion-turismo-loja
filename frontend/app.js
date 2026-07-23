@@ -7,6 +7,7 @@ import { render as renderDB }       from './views/database.js';
 import { render as renderETL }      from './views/etl.js';
 import { render as renderLugares }  from './views/lugares.js';
 import { render as renderEventos }  from './views/eventos.js';
+import { render as renderReviews }  from './views/reviews.js';
 import { apiFetch, toast }          from './components/badges.js';
 import { nuevoToken, esTokenVigente } from './components/nav-state.js';
 
@@ -59,6 +60,7 @@ async function checkHealth() {
 const TITULOS = {
   home: 'Inicio',
   etl: 'Ingesta ETL',
+  reviews: 'Reviews',
   'db-eventos' : 'Base de Datos · Eventos',
   'db-lugares' : 'Base de Datos · Lugares',
   'db-recursos': 'Base de Datos · Recursos',
@@ -98,6 +100,7 @@ export async function ir(vista) {
     case 'db-lugares':   renderLugares(main);            break;
     case 'db-eventos':   renderEventos(main);            break;
     case 'etl':          renderETL(main);                break;
+    case 'reviews':      renderReviews(main);            break;
   }
 }
 

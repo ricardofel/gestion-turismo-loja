@@ -268,18 +268,20 @@ _STOP_WORDS_ES = {
 
 
 @router.get("/palabras-frecuentes")
-def palabras_frecuentes():
+def palabras_frecuentes(plataforma: str | None = None):
     """
     La(s) palabra(s) más repetidas en el texto de los recursos
     (título/descripción), sin contar palabras de relleno.
     Distinto de /hashtags: aquí se analiza el texto libre, no las etiquetas.
+    `plataforma` filtra (ej: ?plataforma=GoogleReviews).
     """
     col = get_col(COL_RECURSO)
 
-    textos = col.find(
-        {"metadata.texto_original": {"$exists": True, "$ne": ""}},
-        {"metadata.texto_original": 1}
-    )
+    match = {"metadata.texto_original": {"$exists": True, "$ne": ""}}
+    if plataforma:
+        match["origen.plataforma"] = plataforma
+
+    textos = col.find(match, {"metadata.texto_original": 1})
 
     conteo = {}
     for r in textos:
@@ -295,3 +297,149 @@ def palabras_frecuentes():
         "exito": True,
         "data": [{"palabra": p, "count": c} for p, c in top],
     }
+
+
+@router.get("/reviews-resumen")
+def reviews_resumen():
+    """
+    KPIs generales de las reseñas de Google (rating promedio, % de Local
+    Guides, distribución de estrellas).
+    """
+    col = get_col(COL_RECURSO)
+    match = {"origen.plataforma": "GoogleReviews"}
+
+    total = col.count_documents(match)
+    if total == 0:
+        return {"exito": True, "total": 0, "rating_promedio": None, "pct_local_guides": 0, "distribucion": []}
+
+    agg = list(col.aggregate([
+        {"$match": match},
+        {"$group": {
+            "_id": None,
+            "rating_promedio": {"$avg": "$metadata.metricas.rating"},
+            "local_guides": {"$sum": {"$cond": ["$metadata.autor.verified", 1, 0]}},
+        }}
+    ]))
+    a = agg[0] if agg else {}
+
+    distribucion_raw = list(col.aggregate([
+        {"$match": {**match, "metadata.metricas.rating": {"$ne": None}}},
+        {"$group": {"_id": "$metadata.metricas.rating", "count": {"$sum": 1}}},
+    ]))
+    dist_map = {int(r["_id"]): r["count"] for r in distribucion_raw if r["_id"] is not None}
+    distribucion = [{"estrellas": e, "count": dist_map.get(e, 0)} for e in [5, 4, 3, 2, 1]]
+
+    return {
+        "exito": True,
+        "total": total,
+        "rating_promedio": round(a.get("rating_promedio") or 0, 2),
+        "pct_local_guides": round((a.get("local_guides", 0) / total) * 100, 1),
+        "distribucion": distribucion,
+    }
+
+
+@router.get("/reviews-por-lugar")
+def reviews_por_lugar(limite: int = 10):
+    """
+    Rating promedio y cantidad de reseñas por lugar (solo Google Reviews).
+    """
+    col_recurso = get_col(COL_RECURSO)
+    col_lugar   = get_col(COL_LUGAR)
+    limite = max(1, min(limite, 50))
+
+    agg = list(col_recurso.aggregate([
+        {"$match": {"origen.plataforma": "GoogleReviews", "lugar_id": {"$ne": None}}},
+        {"$group": {
+            "_id": "$lugar_id",
+            "count": {"$sum": 1},
+            "rating_promedio": {"$avg": "$metadata.metricas.rating"},
+        }},
+        {"$sort": {"count": -1}},
+        {"$limit": limite},
+    ]))
+
+    resultado = []
+    for item in agg:
+        lugar = col_lugar.find_one({"_id": item["_id"]}, {"nombre": 1, "tipo_lugar": 1})
+        if lugar:
+            resultado.append({
+                "lugar_id": str(item["_id"]),
+                "nombre": lugar["nombre"],
+                "tipo_lugar": lugar.get("tipo_lugar", ""),
+                "count": item["count"],
+                "rating_promedio": round(item["rating_promedio"] or 0, 2),
+            })
+
+    return {"exito": True, "data": resultado}
+
+
+@router.get("/reviews-recientes")
+def reviews_recientes(
+    lugar_id: str | None = None,
+    limite: int = 20,
+    rating: int | None = None,
+    rating_max: int | None = None,
+    orden: str = "recientes",
+    desde: str | None = None,
+    hasta: str | None = None,
+):
+    """
+    Lista de reseñas individuales (texto, autor, rating, lugar).
+    `lugar_id`   filtra por un lugar específico.
+    `rating`     filtra por una calificación exacta (1-5).
+    `rating_max` filtra por calificación <= N (ej: rating_max=2 = quejas).
+    `orden`      "recientes" (default) o "likes" (más útiles primero).
+    `desde`/`hasta` filtran por fecha_publicacion, formato "YYYY-MM-DD".
+    """
+    col_recurso = get_col(COL_RECURSO)
+    col_lugar   = get_col(COL_LUGAR)
+    limite = max(1, min(limite, 100))
+
+    match: dict = {"origen.plataforma": "GoogleReviews"}
+    if lugar_id:
+        try:
+            match["lugar_id"] = ObjectId(lugar_id)
+        except Exception:
+            return {"exito": True, "data": []}
+
+    if rating is not None:
+        match["metadata.metricas.rating"] = rating
+    elif rating_max is not None:
+        match["metadata.metricas.rating"] = {"$lte": rating_max}
+
+    if desde or hasta:
+        rango_fecha: dict = {}
+        if desde:
+            rango_fecha["$gte"] = desde
+        if hasta:
+            rango_fecha["$lte"] = hasta + "T23:59:59Z"
+        match["fecha_publicacion"] = rango_fecha
+
+    campo_orden = "metadata.metricas.likes" if orden == "likes" else "fecha_publicacion"
+    docs = list(col_recurso.find(match).sort(campo_orden, -1).limit(limite))
+
+    lugares_cache: dict[str, str] = {}
+    resultado = []
+    for d in docs:
+        meta = d.get("metadata", {})
+        lid = d.get("lugar_id")
+        nombre_lugar = None
+        if lid:
+            lid_str = str(lid)
+            if lid_str not in lugares_cache:
+                lugar = col_lugar.find_one({"_id": lid}, {"nombre": 1})
+                lugares_cache[lid_str] = lugar["nombre"] if lugar else None
+            nombre_lugar = lugares_cache[lid_str]
+
+        resultado.append({
+            "texto": meta.get("texto_original", ""),
+            "autor": meta.get("autor", {}).get("name", "—"),
+            "es_local_guide": meta.get("autor", {}).get("verified", False),
+            "rating": meta.get("metricas", {}).get("rating"),
+            "likes": meta.get("metricas", {}).get("likes", 0),
+            "fecha": d.get("fecha_publicacion"),
+            "lugar_nombre": nombre_lugar,
+            "url": meta.get("urls", {}).get("review", ""),
+        })
+
+    return {"exito": True, "data": resultado}

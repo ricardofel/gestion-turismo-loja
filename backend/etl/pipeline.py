@@ -68,9 +68,46 @@ def transform_youtube(raw: dict) -> dict:
     }
 
 
+def transform_google_reviews(raw: dict) -> dict:
+    """Normaliza una reseña de Google Reviews (vía SerpApi) al esquema RecursoSchema."""
+    return {
+        "origen": {
+            "plataforma"     : "GoogleReviews",
+            "formato"        : "reseña",
+            "id_externo"     : str(raw.get("review_id") or ""),
+            "fecha_ingesta"  : datetime.now(timezone.utc).isoformat(),
+            "ubicacion_cruda": raw.get("lugar_nombre"),
+        },
+        "estado_procesamiento": "Crudo",
+        "fecha_publicacion"   : raw.get("fecha_iso"),
+        "edicion_id"          : None,
+        # Ya sabemos con certeza a qué lugar pertenece (se consultó por su
+        # google_data_id), no hace falta que detectar_lugar() lo adivine.
+        "lugar_id"            : raw.get("lugar_id"),
+        "metadata": {
+            "metricas": {
+                "rating": raw.get("rating"),
+                "likes" : raw.get("likes", 0),
+            },
+            "autor": {
+                "name"    : raw.get("autor", "—"),
+                "verified": bool(raw.get("es_local_guide", False)),
+            },
+            "texto_original"  : raw.get("texto", ""),
+            "hashtags"        : [],
+            "urls"            : {"review": raw.get("link", "")},
+            "idioma"          : "es",
+            "es_anuncio"      : False,
+            "es_patrocinado"  : False,
+            "hora_publicacion": "",
+        }
+    }
+
+
 # Mapa de transformadores por plataforma
 TRANSFORMERS = {
     "YouTube": transform_youtube,
+    "GoogleReviews": transform_google_reviews,
 }
 
 
