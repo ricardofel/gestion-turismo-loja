@@ -33,9 +33,13 @@ def get_db():
         _client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
         _client.admin.command("ping")
         _db = _client[MONGO_DB]
-        print(f"✅  MongoDB Atlas conectado → base: '{MONGO_DB}'")
+        print(f"[OK] MongoDB Atlas conectado -> base: '{MONGO_DB}'")
     except Exception as e:
-        print(f"❌  No se pudo conectar a MongoDB: {e}")
+        # Mensaje en ASCII a propósito: en Windows con consola cp1252, un
+        # print() con emoji lanza UnicodeEncodeError y ese error escapa de
+        # este except, convirtiendo el fallback controlado (_db = None,
+        # 503 en get_col) en un 500 sin control.
+        print(f"[ERROR] No se pudo conectar a MongoDB: {e}")
         _db = None
     return _db
 

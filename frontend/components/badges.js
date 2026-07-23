@@ -42,9 +42,14 @@ export function toast(msg, tipo = '') {
   t._t = setTimeout(() => t.className = '', 3200);
 }
 
+// En desarrollo local el frontend corre en :5500 y el backend en :8000.
+// En producción (Render u otro host) ambos se sirven desde el mismo
+// servicio/origen, así que ahí basta una ruta relativa (misma URL).
+const ES_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+const API_BASE = ES_LOCAL ? 'http://127.0.0.1:8000' : '';
+
 export async function apiFetch(path, opts = {}) {
-  const API = 'http://127.0.0.1:8000';
-  const r   = await fetch(API + path, {
+  const r = await fetch(API_BASE + path, {
     headers: { 'Content-Type': 'application/json' },
     ...opts
   });

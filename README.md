@@ -111,6 +111,12 @@ gestion-turismo-loja/
 | [`guia_instalacion.md`](guia_instalacion.md) | Cómo levantar el proyecto de cero |
 | [`guia_implementacion_apis.md`](guia_implementacion_apis.md) | Qué APIs están activas y cuáles quedan pendientes de presupuesto |
 | [`guia_implementacion_eda.md`](guia_implementacion_eda.md) | Qué falta en el módulo de estadísticas del Home |
+| [`obtener_credenciales.md`](obtener_credenciales.md) | Cómo crear cada cuenta/API key desde cero (MongoDB Atlas, YouTube, SerpApi) |
+| [`guia_despliegue_render.md`](guia_despliegue_render.md) | Despliegue en Render: por qué está sin credenciales, y cómo activarlas cuando corresponda |
+
+> **Nota:** el proyecto está desplegado en Render de forma **decorativa**
+> (sin `MONGO_URI` ni API keys reales) para no exponer credenciales
+> personales del equipo. Detalle completo en `guia_despliegue_render.md`.
 
 ## Licencia
 
