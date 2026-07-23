@@ -5,8 +5,8 @@
 
 ## 1. Contexto: por qué está desplegado sin credenciales
 
-Este proyecto se hostea en [Render](https://render.com) **a pedido de la
-tutoría**, pero **sin la cadena de conexión de MongoDB Atlas ni la API Key
+Este proyecto se hostea en [Render](https://render.com), pero **sin la 
+cadena de conexión de MongoDB Atlas ni la API Key
 de YouTube usadas en desarrollo**, porque esas credenciales pertenecen a
 cuentas personales del equipo (ver `obtener_credenciales.md`) y no deben
 quedar expuestas en un servicio público.
