@@ -1,0 +1,3778 @@
+[
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_001",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-23T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 11
+      },
+      "autor": {
+        "name": "María Orozco",
+        "verified": false
+      },
+      "texto_original": "Un lugar lleno de fe y paz espiritual. La arquitectura es impresionante, vale mucho la pena visitarlo.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_002",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-09T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 0
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": true
+      },
+      "texto_original": "Hermoso templo, muy bien conservado. El silencio y la tranquilidad del lugar invitan a la reflexión.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_003",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-07T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "Me encantó la iluminación y los detalles arquitectónicos. Recomendado para fotos también.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_004",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-31T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": false
+      },
+      "texto_original": "Un lugar lleno de fe y paz espiritual. La arquitectura es impresionante, vale mucho la pena visitarlo.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_005",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Ítalo Benítez",
+        "verified": false
+      },
+      "texto_original": "La visita estuvo bien, pero el acceso podría mejorar bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_006",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Basílica de la Virgen del Cisne"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a104",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Sofía Ramón",
+        "verified": true
+      },
+      "texto_original": "Me encantó la iluminación y los detalles arquitectónicos. Recomendado para fotos también.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_007",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-25T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Ricardo Torres",
+        "verified": true
+      },
+      "texto_original": "Fui a un evento ahí y quedé encantado con las instalaciones y la programación cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_008",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-08T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Nataly Guzmán",
+        "verified": false
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_009",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-29T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Kevin Zúñiga",
+        "verified": true
+      },
+      "texto_original": "Excelente espacio para conocer más de la cultura lojana. El personal es muy amable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_010",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-10T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_011",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-02T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": true
+      },
+      "texto_original": "Excelente espacio para conocer más de la cultura lojana. El personal es muy amable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_012",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Casa de la Cultura Benjamín Carrión — Núcleo Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-29T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f92",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Daniela Espinoza",
+        "verified": false
+      },
+      "texto_original": "Buen lugar para actividades culturales, aunque a veces falta más difusión de los eventos.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_013",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-13T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 1,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Marco Vinicio Aguilar",
+        "verified": false
+      },
+      "texto_original": "La visita estuvo bien, pero el acceso podría mejorar bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_014",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-18T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 0
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": true
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_015",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": true
+      },
+      "texto_original": "Regular. Hay potencial pero falta más inversión y promoción turística.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_016",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-20T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Diego Cueva",
+        "verified": false
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_017",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Daniela Espinoza",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_018",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Ximena Palacios",
+        "verified": true
+      },
+      "texto_original": "Me encantó la iluminación y los detalles arquitectónicos. Recomendado para fotos también.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_019",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a428c46324890f7b618760c",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_020",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-28T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "Un lugar lleno de fe y paz espiritual. La arquitectura es impresionante, vale mucho la pena visitarlo.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_021",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-30T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Ana Lucía Sarango",
+        "verified": false
+      },
+      "texto_original": "Visita obligatoria si vienes a Loja. La historia detrás de este lugar es fascinante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_022",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-27T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_023",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-04T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Pedro Jiménez",
+        "verified": true
+      },
+      "texto_original": "Hermoso templo, muy bien conservado. El silencio y la tranquilidad del lugar invitan a la reflexión.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_024",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-28T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Sofía Ramón",
+        "verified": true
+      },
+      "texto_original": "Hermoso templo, muy bien conservado. El silencio y la tranquilidad del lugar invitan a la reflexión.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_025",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Diego Cueva",
+        "verified": false
+      },
+      "texto_original": "Un lugar lleno de fe y paz espiritual. La arquitectura es impresionante, vale mucho la pena visitarlo.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_026",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-06T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 0
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": true
+      },
+      "texto_original": "Visita obligatoria si vienes a Loja. La historia detrás de este lugar es fascinante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_027",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": true
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_028",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-26T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Ximena Palacios",
+        "verified": true
+      },
+      "texto_original": "Me encantó la iluminación y los detalles arquitectónicos. Recomendado para fotos también.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_029",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Catedral de la Inmaculada Concepción"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8a",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Verónica Chalán",
+        "verified": false
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_030",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Marco Vinicio Aguilar",
+        "verified": false
+      },
+      "texto_original": "Fuimos a la feria agropecuaria y estuvo genial, mucha variedad de puestos.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_031",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Diego Cueva",
+        "verified": true
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_032",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-31T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "Muy buen lugar para ferias y eventos masivos, amplio espacio y buena organización.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_033",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Verónica Chalán",
+        "verified": true
+      },
+      "texto_original": "Muy buen lugar para ferias y eventos masivos, amplio espacio y buena organización.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_034",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-09T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Kevin Zúñiga",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_035",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-05T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": false
+      },
+      "texto_original": "El espacio es grande pero podrían mejorar la señalización interna.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_036",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-27T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": false
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_037",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-19T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Nataly Guzmán",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_038",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Complejo Ferial Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a105",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Isabel Ramírez",
+        "verified": false
+      },
+      "texto_original": "Muy buen lugar para ferias y eventos masivos, amplio espacio y buena organización.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_039",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-23T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": false
+      },
+      "texto_original": "Un pequeño tesoro cultural de la ciudad, vale la pena dedicarle una hora.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_040",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-12T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Ximena Palacios",
+        "verified": false
+      },
+      "texto_original": "Me hubiera gustado que hubiera más información escrita, pero la visita guiada compensa eso.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_041",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-16T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Paola Guamán",
+        "verified": false
+      },
+      "texto_original": "Colección muy interesante, el guía explicó todo con mucho detalle. Aprendí bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_042",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-06T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Pedro Jiménez",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_043",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-10T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": false
+      },
+      "texto_original": "Colección muy interesante, el guía explicó todo con mucho detalle. Aprendí bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_044",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Museo de la Música de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-08T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8e",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": false
+      },
+      "texto_original": "Un pequeño tesoro cultural de la ciudad, vale la pena dedicarle una hora.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_045",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": false
+      },
+      "texto_original": "Un espacio verde muy bien cuidado, ideal para pasear en familia los fines de semana.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_046",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 0
+      },
+      "autor": {
+        "name": "Belén Cabrera",
+        "verified": false
+      },
+      "texto_original": "Me encanta venir aquí a correr en las mañanas, está limpio y hay buena vigilancia.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_047",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Marco Vinicio Aguilar",
+        "verified": false
+      },
+      "texto_original": "Un espacio verde muy bien cuidado, ideal para pasear en familia los fines de semana.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_048",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-22T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Ítalo Benítez",
+        "verified": false
+      },
+      "texto_original": "Me encanta venir aquí a correr en las mañanas, está limpio y hay buena vigilancia.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_049",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "Bonito parque, aunque los fines de semana se llena bastante de gente.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_050",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-23T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Sofía Ramón",
+        "verified": false
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_051",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-04T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": false
+      },
+      "texto_original": "Perfecto para llevar a los niños, tiene juegos y áreas verdes amplias.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_052",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Bolivar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-12T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a102",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Andrés Correa",
+        "verified": true
+      },
+      "texto_original": "Un espacio verde muy bien cuidado, ideal para pasear en familia los fines de semana.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_053",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Marco Vinicio Aguilar",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_054",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-20T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": true
+      },
+      "texto_original": "Me gusta mucho la arquitectura de los alrededores, se siente la historia de Loja.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_055",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-20T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Verónica Chalán",
+        "verified": true
+      },
+      "texto_original": "Me gusta mucho la arquitectura de los alrededores, se siente la historia de Loja.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_056",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-13T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "Plaza muy bonita en el centro histórico, ideal para tomar fotos y pasear.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_057",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-10T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Sofía Ramón",
+        "verified": true
+      },
+      "texto_original": "Plaza muy bonita en el centro histórico, ideal para tomar fotos y pasear.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_058",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Central de Loja"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-23T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8d",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Ricardo Torres",
+        "verified": false
+      },
+      "texto_original": "Punto de encuentro clásico de la ciudad, siempre hay algo de actividad cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_059",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-13T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_060",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-18T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "La naturaleza aquí es espectacular, senderos bien marcados y aire puro.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_061",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-26T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": false
+      },
+      "texto_original": "La visita estuvo bien, pero el acceso podría mejorar bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_062",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-08T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Ana Lucía Sarango",
+        "verified": true
+      },
+      "texto_original": "Ideal para desconectarse de la ciudad, ojalá mejoren un poco el acceso vial.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_063",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-27T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Priscila Encalada",
+        "verified": false
+      },
+      "texto_original": "La naturaleza aquí es espectacular, senderos bien marcados y aire puro.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_064",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": true
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_065",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": false
+      },
+      "texto_original": "Un paraíso natural, ideal para quienes disfrutan del ecoturismo y la caminata.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_066",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-31T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Belén Cabrera",
+        "verified": false
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_067",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-07T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 2
+      },
+      "autor": {
+        "name": "María Orozco",
+        "verified": false
+      },
+      "texto_original": "La visita estuvo bien, pero el acceso podría mejorar bastante.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_068",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Nacional Podocarpus"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8f",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Paola Guamán",
+        "verified": false
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_069",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-26T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Diego Cueva",
+        "verified": true
+      },
+      "texto_original": "Bonito lugar, aunque hacía falta más información turística disponible en el sitio.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_070",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-18T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Belén Cabrera",
+        "verified": true
+      },
+      "texto_original": "Bonito parque, aunque los fines de semana se llena bastante de gente.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_071",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-17T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Pedro Jiménez",
+        "verified": true
+      },
+      "texto_original": "Regular. Hay potencial pero falta más inversión y promoción turística.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_072",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-04T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Ximena Palacios",
+        "verified": true
+      },
+      "texto_original": "Un espacio verde muy bien cuidado, ideal para pasear en familia los fines de semana.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_073",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-06T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": false
+      },
+      "texto_original": "Bonito parque, aunque los fines de semana se llena bastante de gente.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_074",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-02T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "Bonito parque, aunque los fines de semana se llena bastante de gente.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_075",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-11T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": true
+      },
+      "texto_original": "Me encanta venir aquí a correr en las mañanas, está limpio y hay buena vigilancia.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_076",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Parque Simón Bolívar"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a103",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": true
+      },
+      "texto_original": "Me encanta venir aquí a correr en las mañanas, está limpio y hay buena vigilancia.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_077",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-20T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": true
+      },
+      "texto_original": "Me gusta mucho la arquitectura de los alrededores, se siente la historia de Loja.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_078",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-03T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Ana Lucía Sarango",
+        "verified": false
+      },
+      "texto_original": "Punto de encuentro clásico de la ciudad, siempre hay algo de actividad cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_079",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-20T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Ítalo Benítez",
+        "verified": false
+      },
+      "texto_original": "Punto de encuentro clásico de la ciudad, siempre hay algo de actividad cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_080",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-02T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 0
+      },
+      "autor": {
+        "name": "Paola Guamán",
+        "verified": true
+      },
+      "texto_original": "Plaza muy bonita en el centro histórico, ideal para tomar fotos y pasear.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_081",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-29T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Kevin Zúñiga",
+        "verified": false
+      },
+      "texto_original": "Punto de encuentro clásico de la ciudad, siempre hay algo de actividad cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_082",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-22T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Belén Cabrera",
+        "verified": false
+      },
+      "texto_original": "Me gusta mucho la arquitectura de los alrededores, se siente la historia de Loja.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_083",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-22T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Pedro Jiménez",
+        "verified": false
+      },
+      "texto_original": "Me gusta mucho la arquitectura de los alrededores, se siente la historia de Loja.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_084",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza San Sebastián"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f8b",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Andrés Correa",
+        "verified": true
+      },
+      "texto_original": "Punto de encuentro clásico de la ciudad, siempre hay algo de actividad cultural.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_085",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": false
+      },
+      "texto_original": "Buena plaza para descansar un rato mientras se recorre el centro histórico.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_086",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-02T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Sofía Ramón",
+        "verified": false
+      },
+      "texto_original": "Lugar tranquilo y agradable para visitar en el centro de la ciudad.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_087",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-09T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 12
+      },
+      "autor": {
+        "name": "María Orozco",
+        "verified": false
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_088",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-25T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Juan Carlos Aguirre",
+        "verified": false
+      },
+      "texto_original": "Lugar tranquilo y agradable para visitar en el centro de la ciudad.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_089",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-23T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": false
+      },
+      "texto_original": "Buena plaza para descansar un rato mientras se recorre el centro histórico.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_090",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-24T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "Buena plaza para descansar un rato mientras se recorre el centro histórico.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_091",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Plaza de San Francisco"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-04T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a101",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 8
+      },
+      "autor": {
+        "name": "Ana Lucía Sarango",
+        "verified": false
+      },
+      "texto_original": "Buena plaza para descansar un rato mientras se recorre el centro histórico.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_092",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": false
+      },
+      "texto_original": "Buen punto de referencia y mirador, se ve bonito de noche con las luces.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_093",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-25T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": false
+      },
+      "texto_original": "Un ícono de la ciudad, muy fotogénico y con historia interesante detrás.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_094",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-12-30T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Daniela Espinoza",
+        "verified": false
+      },
+      "texto_original": "Un ícono de la ciudad, muy fotogénico y con historia interesante detrás.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_095",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-13T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 5
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": false
+      },
+      "texto_original": "Buen punto de referencia y mirador, se ve bonito de noche con las luces.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_096",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-02T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": true
+      },
+      "texto_original": "Un ícono de la ciudad, muy fotogénico y con historia interesante detrás.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_097",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-15T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 9
+      },
+      "autor": {
+        "name": "Ítalo Benítez",
+        "verified": true
+      },
+      "texto_original": "Está bien, pero esperaba un poco más de mantenimiento en algunas áreas.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_098",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Puerta de la Ciudad"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-16T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f90",
+    "metadata": {
+      "metricas": {
+        "rating": 2,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Verónica Chalán",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_099",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-26T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Rodrigo Samaniego",
+        "verified": false
+      },
+      "texto_original": "Fui a un evento del festival y la experiencia fue inolvidable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_100",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-04T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Nataly Guzmán",
+        "verified": false
+      },
+      "texto_original": "El edificio es hermoso, aunque a veces los boletos se agotan rápido.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_101",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-21T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Marco Vinicio Aguilar",
+        "verified": false
+      },
+      "texto_original": "El edificio es hermoso, aunque a veces los boletos se agotan rápido.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_102",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-04-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Kevin Zúñiga",
+        "verified": true
+      },
+      "texto_original": "Fui a un evento del festival y la experiencia fue inolvidable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_103",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-06T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Luis Fernando Vivanco",
+        "verified": true
+      },
+      "texto_original": "Fui a un evento del festival y la experiencia fue inolvidable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_104",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 6
+      },
+      "autor": {
+        "name": "Jorge Luis Castillo",
+        "verified": true
+      },
+      "texto_original": "Fui a un evento del festival y la experiencia fue inolvidable.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_105",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-21T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Priscila Encalada",
+        "verified": true
+      },
+      "texto_original": "El edificio es hermoso, aunque a veces los boletos se agotan rápido.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_106",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-29T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": false
+      },
+      "texto_original": "El edificio es hermoso, aunque a veces los boletos se agotan rápido.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_107",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2025-11-08T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Fernando Merino",
+        "verified": true
+      },
+      "texto_original": "Excelente lugar para disfrutar de obras y conciertos, muy buena acústica.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_108",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Teatro \"Benjamín Carrión Mora\""
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-01-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a4191ec6fc58a64bc85a100",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 2
+      },
+      "autor": {
+        "name": "Ítalo Benítez",
+        "verified": false
+      },
+      "texto_original": "Excelente lugar para disfrutar de obras y conciertos, muy buena acústica.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_109",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-26T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Gabriela Ochoa",
+        "verified": false
+      },
+      "texto_original": "La biodiversidad es impresionante, vimos aves que no había visto en mi vida.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_110",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-03T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 3
+      },
+      "autor": {
+        "name": "Daniela Espinoza",
+        "verified": true
+      },
+      "texto_original": "Un paraíso natural, ideal para quienes disfrutan del ecoturismo y la caminata.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_111",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-17T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 4
+      },
+      "autor": {
+        "name": "Belén Cabrera",
+        "verified": false
+      },
+      "texto_original": "La naturaleza aquí es espectacular, senderos bien marcados y aire puro.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_112",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-25T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 12
+      },
+      "autor": {
+        "name": "Carmen Rojas",
+        "verified": true
+      },
+      "texto_original": "Regular. Hay potencial pero falta más inversión y promoción turística.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_113",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-03T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Ricardo Torres",
+        "verified": false
+      },
+      "texto_original": "Ideal para desconectarse de la ciudad, ojalá mejoren un poco el acceso vial.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_114",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-02-16T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Diego Cueva",
+        "verified": true
+      },
+      "texto_original": "Ideal para desconectarse de la ciudad, ojalá mejoren un poco el acceso vial.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_115",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 7
+      },
+      "autor": {
+        "name": "Pedro Jiménez",
+        "verified": false
+      },
+      "texto_original": "La biodiversidad es impresionante, vimos aves que no había visto en mi vida.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_116",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-03-14T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 5,
+        "likes": 10
+      },
+      "autor": {
+        "name": "Kevin Zúñiga",
+        "verified": true
+      },
+      "texto_original": "La biodiversidad es impresionante, vimos aves que no había visto en mi vida.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_117",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-05-31T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 4,
+        "likes": 11
+      },
+      "autor": {
+        "name": "Andrés Correa",
+        "verified": false
+      },
+      "texto_original": "Ideal para desconectarse de la ciudad, ojalá mejoren un poco el acceso vial.",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  },
+  {
+    "origen": {
+      "plataforma": "GoogleReviews",
+      "formato": "reseña",
+      "id_externo": "gr_manual_118",
+      "fecha_ingesta": "2026-07-23T13:38:31Z",
+      "ubicacion_cruda": "Valle de Vilcabamba"
+    },
+    "estado_procesamiento": "Crudo",
+    "fecha_publicacion": "2026-06-01T00:00:00Z",
+    "edicion_id": null,
+    "lugar_id": "6a40ab3d054abfbf82051f91",
+    "metadata": {
+      "metricas": {
+        "rating": 3,
+        "likes": 1
+      },
+      "autor": {
+        "name": "Isabel Ramírez",
+        "verified": true
+      },
+      "texto_original": "No estuvo mal, pero hay pocos servicios cerca (baños, cafeterías).",
+      "hashtags": [],
+      "urls": {
+        "review": ""
+      },
+      "idioma": "es",
+      "es_anuncio": false,
+      "es_patrocinado": false,
+      "hora_publicacion": ""
+    }
+  }
+]

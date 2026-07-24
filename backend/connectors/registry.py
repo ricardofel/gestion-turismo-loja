@@ -8,8 +8,10 @@ backend/schemas.py, e impórtala aquí. Ver guia_implementacion_apis.md para el
 detalle de qué APIs están disponibles y con qué costo/dificultad.
 """
 from .youtube import ConectorYouTubeReal
+from .google_reviews import ConectorGoogleReviews
 from .base    import ConectorBase
 
 CONECTORES: dict[str, ConectorBase] = {
     "YouTube": ConectorYouTubeReal(),
+    "GoogleReviews": ConectorGoogleReviews(),
 }
