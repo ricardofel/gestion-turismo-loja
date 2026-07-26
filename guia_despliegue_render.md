@@ -3,36 +3,34 @@
 
 ---
 
-## 1. Contexto: por qué está desplegado sin credenciales
+## 1. Contexto: estado actual del despliegue
 
-Este proyecto se hostea en [Render](https://render.com), pero **sin la 
-cadena de conexión de MongoDB Atlas ni la API Key
-de YouTube usadas en desarrollo**, porque esas credenciales pertenecen a
-cuentas personales del equipo (ver `obtener_credenciales.md`) y no deben
-quedar expuestas en un servicio público.
+**Actualizado 2026-07-26.** Este documento originalmente decía que el
+despliegue en Render era "decorativo, sin credenciales reales" — esa fue
+la decisión inicial del equipo, pero **ya no es el estado actual**.
 
-Por eso, el despliegue en Render es **decorativo por ahora**: sirve para
-mostrar que la aplicación compila, arranca y la interfaz carga
-correctamente, pero **sin base de datos ni ingesta real conectada**. Esto
-es intencional y no es un error de configuración.
+Para una revisión puntual con la docente, se activaron temporalmente las
+credenciales reales (`MONGO_URI`, `SERPAPI_KEY`, `YOUTUBE_API_KEY`) en el
+panel de Render → Environment. El servicio está **en vivo y conectado al
+cluster compartido real** (el mismo que se usa en desarrollo local), no a
+una base vacía de demostración.
 
-El backend está preparado para esto sin necesitar ningún cambio de código:
-si no hay `MONGO_URI` configurada, el servidor arranca igual (la conexión a
-Mongo es "perezosa", solo se intenta en la primera petición que la
-necesita — ver `backend/database.py`) y cada endpoint que depende de la
-base de datos responde con un error controlado (503) en vez de tumbar el
-servicio. El punto `/api/health` siempre responde 200, indicando
-`"mongodb": "desconectado"` cuando no hay credenciales.
+**Esto es temporal, no la configuración definitiva.** El plan sigue
+siendo el mismo que se documentaba originalmente: cuando el proyecto pase
+a un despliegue "de verdad" (no solo para una revisión puntual), estas
+credenciales de cuentas personales del equipo deben **quitarse** de
+Render y reemplazarse por credenciales propias de la institución/tutora
+(cuenta de Atlas propia, keys propias) — ver sección 6 actualizada. Dejar
+credenciales personales indefinidamente en un servicio público expone:
+- El cluster de MongoDB compartido de todo el equipo (accesible por
+  cualquiera que encuentre la URL).
+- La cuota de SerpApi (de pago por uso) y de YouTube Data API de quien
+  puso su key.
 
-**Qué vas a ver en el deploy actual:**
-- La interfaz completa carga con normalidad (sidebar, vistas, estilos).
-- El indicador de estado en la esquina superior derecha muestra "Sin base
-  de datos" (punto rojo) — esperado.
-- Las vistas que dependen de datos (Inicio, Base de Datos, ETL) se ven
-  vacías o muestran mensajes tipo "Sin datos aún" — esperado.
-- No hay forma de ingerir contenido real ni de ver los ~2400 recursos que
-  sí existen en el cluster compartido de desarrollo — esperado, porque ese
-  cluster no está conectado aquí.
+**Antes de esa etapa "de verdad":** si alguien nuevo lee esto y encuentra
+las credenciales todavía puestas, es señal de que falta el paso de
+"apagarlas" tras la revisión — avisar al equipo, no asumir que quedaron
+así a propósito para siempre.
 
 ---
 
@@ -142,18 +140,28 @@ puramente configuración en el panel de Render.
 
 ---
 
-## 6. Checklist rápido para "activar" el hosting con datos reales
+## 6. Checklist — activar para una revisión, y apagar después
 
-- [ ] Cuenta de MongoDB Atlas creada (propia, no la personal de un
-      estudiante) y `MONGO_URI` a mano.
-- [ ] Network Access de Atlas con `0.0.0.0/0` (o la IP saliente de Render,
-      si se prefiere restringir).
-- [ ] API Key de YouTube Data API v3 generada.
-- [ ] Las 3-4 variables cargadas en Render → Environment.
+**Para activar (antes de una demo/revisión puntual):**
+- [ ] `MONGO_URI`, `MONGO_DB`, `SERPAPI_KEY`, `YOUTUBE_API_KEY` cargadas en
+      Render → Environment.
+- [ ] Network Access de Atlas permite la conexión desde Render (`0.0.0.0/0`
+      en el plan gratuito, ya que Render no da IP fija).
 - [ ] `https://<tu-servicio>.onrender.com/api/health` responde
       `"mongodb": "conectado"`.
-- [ ] Probar en la interfaz: Ingesta ETL → YouTube → extraer con un tag de
-      prueba (ej. `fiavl`) y confirmar que trae resultados reales.
+- [ ] Avisar al equipo (ej. mensaje corto al grupo) que el hosting quedó
+      con credenciales reales temporalmente, y para qué/hasta cuándo.
 
-Hasta que esos pasos no se hagan, el estado esperado y correcto del deploy
-es: interfaz visible, sin datos, punto de estado en rojo. No es un bug.
+**Para apagar (apenas termine la revisión — no dejarlo así indefinido):**
+- [ ] Quitar `MONGO_URI` y `SERPAPI_KEY` de Render → Environment (son las
+      de mayor riesgo/costo).
+- [ ] Confirmar que `/api/health` vuelve a mostrar `"mongodb":
+      "desconectado"`.
+- [ ] Revisar el consumo real de SerpApi en su dashboard durante la
+      ventana en que estuvo activo, para descartar uso inesperado.
+- [ ] Si se restringió la whitelist de Atlas solo para esto, evaluar
+      volver a cerrarla.
+
+Cuando el proyecto tenga un despliegue "de verdad" (no solo para una
+revisión), estas credenciales deben ser las de una cuenta propia de la
+institución/tutora, no las personales de un estudiante del equipo.

@@ -123,9 +123,10 @@ gestion-turismo-loja/
 | [`obtener_credenciales.md`](obtener_credenciales.md) | Cómo crear cada cuenta/API key desde cero (MongoDB Atlas, YouTube, SerpApi) |
 | [`guia_despliegue_render.md`](guia_despliegue_render.md) | Despliegue en Render: por qué está sin credenciales, y cómo activarlas cuando corresponda |
 
-> **Nota:** el proyecto está desplegado en Render de forma **decorativa**
-> (sin `MONGO_URI` ni API keys reales) para no exponer credenciales
-> personales del equipo. Detalle completo en `guia_despliegue_render.md`.
+> **Nota:** el despliegue en Render tiene actualmente credenciales reales
+> configuradas **temporalmente**, para una revisión puntual con la
+> docente — no es el estado definitivo. Detalle completo, incluyendo
+> cuándo y cómo quitarlas después, en `guia_despliegue_render.md`.
 
 ## Licencia
 
