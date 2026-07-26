@@ -5,11 +5,8 @@
 
 ## 1. Contexto: estado actual del despliegue
 
-**Actualizado 2026-07-26.** Este documento originalmente decía que el
-despliegue en Render era "decorativo, sin credenciales reales" — esa fue
-la decisión inicial del equipo, pero **ya no es el estado actual**.
 
-Para una revisión puntual con la docente, se activaron temporalmente las
+Se activaron temporalmente las
 credenciales reales (`MONGO_URI`, `SERPAPI_KEY`, `YOUTUBE_API_KEY`) en el
 panel de Render → Environment. El servicio está **en vivo y conectado al
 cluster compartido real** (el mismo que se usa en desarrollo local), no a
@@ -17,7 +14,7 @@ una base vacía de demostración.
 
 **Esto es temporal, no la configuración definitiva.** El plan sigue
 siendo el mismo que se documentaba originalmente: cuando el proyecto pase
-a un despliegue "de verdad" (no solo para una revisión puntual), estas
+a un despliegue "de verdad" , estas
 credenciales de cuentas personales del equipo deben **quitarse** de
 Render y reemplazarse por credenciales propias de la institución/tutora
 (cuenta de Atlas propia, keys propias) — ver sección 6 actualizada. Dejar
